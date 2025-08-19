@@ -6,18 +6,22 @@
 <!-- Typing Intro -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&pause=1000&color=F70000&center=true&vCenter=true&width=600&lines=Blockchain+Consultant;Helping+Businesses+Scale+With+Web3;Full+Stack+Developer;Solidity+%7C+Rust+%7C+Solana;DeFi+%7C+NFT+%7C+Web3+Specialist&multiline=true"/>
+    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=26&pause=1000&color=F70000&center=true&vCenter=true&width=900&height=100&lines=Blockchain+Consultant;Blockchain+%7C+Solana%2C+Ethereum%2C+Private+Blockchains;Full+Stack+Developer;Solidity+%7C+Rust+%7C+Anchor;DeFi+%7C+NFT+%7C+Web3+Specialist&multiline=true&lineHeight=42"/>
   </a>
 </p>
 
 ---
 
 ## 🧑‍💻 About Me  
-- 💼 **Blockchain Consultant** with **3+ years of experience** in Ethereum & Solana ecosystems.  
-- 🔗 Expertise: **Smart Contracts | DeFi | NFT | Full Stack Blockchain Apps**  
-- 📖 **Research Author** (*Springer 2023 – Securing Supply Chains with Blockchain*).  
-- 🚀 Co-founder of **Hashnetics** (Blockchain, Web, E-Commerce, Design).  
-- 🎯 Mission: To build **scalable, secure, and futuristic blockchain solutions**.  
+
+🌟 **Blockchain Consultant | Full-Stack Developer | Web3 Innovator**  
+
+- 💼 **3+ years of experience** delivering blockchain solutions across **Ethereum, Solana, and Private Blockchains**.  
+- 🔗 Specialized in **Smart Contracts, DeFi, NFTs, and Full-Stack Blockchain Applications**.  
+- 📖 **Published Research Author** (*Springer 2023 – Securing Supply Chains with Blockchain*).  
+- 🚀 **Co-Founder of Hashnetics** → Building next-gen solutions in **Blockchain, Web, E-Commerce, and Design**.  
+- 🎯 Passionate about **scalable, secure, and futuristic blockchain ecosystems**.  
+- ⚡ Strong believer in **continuous learning, innovation, and decentralization**.  
 
 ---
 
@@ -31,31 +35,46 @@
 
 ## 💼 Experience Timeline  
 
-### 🚀 **Hashnetics – Co-Founder** (2025 – Present)  
-Blockchain & Full-stack solutions for startups + enterprises.  
-
-### 🌍 **Freelance Blockchain Dev** (2022 – Present)  
-DeFi, NFT platforms, custom smart contracts, Web3 integrations.  
-
-### 🏢 **Systems Limited – Junior Blockchain Consultant** (2023 – 2025)  
-Ethereum & Solana smart contract development, scaling solutions.  
-
-### 🌐 **FusionwaveAI – Full Stack Blockchain Dev** (2024)  
-Ethereum/Shardeum solutions, boosted transaction speeds by **20%**.  
-
-### 🔒 **Kaizen Global – Blockchain Developer** (2022 – 2023)  
-Audited & deployed contracts, reduced vulnerabilities by **15%**.  
+🟢 **Mar 2025 – Present**  
+### 🚀 Co-Founder – [Hashnetics](https://hashnetics.com/)  
+> Building **Blockchain & Full-Stack solutions** for startups and enterprises.  
+💡 Delivered projects with **Ethereum, Solana, MERN, Shopify, WooCommerce**.  
+🎨 Led **UI/UX + branding** alongside technical development.  
 
 ---
 
-## 🚀 Featured Projects  
-
-🔹 **Blockchain-Powered Ecommerce Plugin** – Solana crypto payments in e-commerce.  
-🔹 **Blockchain Document Signing DApp** – Multi-step approval with identity verification.  
-🔹 **Ethereum Decentralized File Storage** – Solidity contracts for secure file storage.  
-🔹 **Dockerized Blockchain Projects** – Automated deployment for multi-chain systems.  
+🟢 **Dec 2022 – Present**  
+### 🌍 Freelance Blockchain Developer  
+> DeFi, NFT platforms, **end-to-end smart contracts + Web3 integrations**.  
+🛠️ Tech stack: Solidity, Rust, Anchor, React, Next.js, Tailwind.  
+🔍 Provided **audits, consulting, and bug fixing** for global clients.  
 
 ---
+
+🟢 **Sep 2023 – Feb 2025**  
+### 🏢 Junior Consultant Blockchain – Systems Limited  
+> Developed & deployed **Ethereum & Solana smart contracts**.  
+📈 Enhanced **transaction efficiency, scalability, and security**.  
+🤝 Collaborated with teams on **enterprise blockchain solutions**.  
+
+---
+
+🟢 **Feb 2024 – May 2024**  
+### 🌐 Full Stack Blockchain Dev – FusionwaveAI  
+> Specialized in **Shardium, Skale, and Hala blockchains**.  
+⚡ Increased transaction speeds by **20%**.  
+🛠️ Optimized development workflows, cutting build times by **15%**.  
+
+---
+
+🟢 **Dec 2022 – Aug 2023**  
+### 🔒 Blockchain Developer – Kaizen Global  
+> Spearheaded **smart contract deployment & auditing**.  
+🛡️ Reduced vulnerabilities by **15%** through better auditing.  
+🔗 Improved **operational efficiency** with secure blockchain solutions.  
+
+---
+
 
 ## 📊 GitHub Insights  
 
@@ -72,7 +91,7 @@ Audited & deployed contracts, reduced vulnerabilities by **15%**.
 
 ## 🎓 Education & Certifications  
 
-🎓 **BSc Computer Science** – University of Azad Jammu and Kashmir (2018–2022)  
+🎓 **Bsc Computer Science** – (2018–2022)  
 📜 **Blockchain Specialization** – Coursera  
 📜 **DeFi – Future of Finance** – Coursera  
 📜 **Cyber Security Foundations** – ISCS  
