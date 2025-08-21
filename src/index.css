@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Fira Code', monospace;
+    background-color: #000000;
+    color: #ffffff;
+    overflow-x: hidden;
+  }
+  
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #ffffff #000000;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #000000;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #ffffff;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #cccccc;
+  }
+}
+
+@layer components {
+  .terminal-text {
+    @apply font-mono text-white;
+  }
+  
+  .terminal-button {
+    @apply bg-black border border-white text-white px-4 py-2 font-mono 
+           hover:bg-white hover:text-black transition-all duration-300
+           focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50;
+  }
+  
+  .glitch-text {
+    text-shadow: 
+      0.05em 0 0 #ffffff, 
+      -0.03em -0.04em 0 #ffffff,
+      0.025em 0.04em 0 #ffffff;
+    animation: glitch 725ms infinite;
+  }
+  
+  .glitch-text-light {
+    text-shadow: 
+      0.05em 0 0 #374151, 
+      -0.03em -0.04em 0 #4b5563,
+      0.025em 0.04em 0 #6b7280;
+    animation: glitch-light 725ms infinite;
+  }
+}
+
+@keyframes glitch {
+  0% {
+    text-shadow: 
+      0.05em 0 0 #ffffff, 
+      -0.03em -0.04em 0 #ffffff,
+      0.025em 0.04em 0 #ffffff;
+  }
+  15% {
+    text-shadow: 
+      0.05em 0 0 #ffffff, 
+      -0.03em -0.04em 0 #ffffff,
+      0.025em 0.04em 0 #ffffff;
+  }
+  16% {
+    text-shadow: 
+      -0.05em -0.025em 0 #ffffff, 
+      0.025em 0.035em 0 #ffffff,
+      -0.05em -0.05em 0 #ffffff;
+  }
+  49% {
+    text-shadow: 
+      -0.05em -0.025em 0 #ffffff, 
+      0.025em 0.035em 0 #ffffff,
+      -0.05em -0.05em 0 #ffffff;
+  }
+  50% {
+    text-shadow: 
+      0.05em 0.035em 0 #ffffff, 
+      0.03em 0 0 #ffffff,
+      0 -0.04em 0 #ffffff;
+  }
+  99% {
+    text-shadow: 
+      0.05em 0.035em 0 #ffffff, 
+      0.03em 0 0 #ffffff,
+      0.03em 0 0 #ffffff;
+  }
+  100% {
+    text-shadow: 
+      -0.05em 0 0 #ffffff, 
+      -0.025em -0.04em 0 #ffffff,
+      -0.04em -0.025em 0 #ffffff;
+  }
+}
+
+@keyframes glitch-light {
+  0% {
+    text-shadow: 
+      0.05em 0 0 #374151, 
+      -0.03em -0.04em 0 #4b5563,
+      0.025em 0.04em 0 #6b7280;
+  }
+  15% {
+    text-shadow: 
+      0.05em 0 0 #374151, 
+      -0.03em -0.04em 0 #4b5563,
+      0.025em 0.04em 0 #6b7280;
+  }
+  16% {
+    text-shadow: 
+      -0.05em -0.025em 0 #374151, 
+      0.025em 0.035em 0 #4b5563,
+      -0.05em -0.05em 0 #6b7280;
+  }
+  49% {
+    text-shadow: 
+      -0.05em -0.025em 0 #374151, 
+      0.025em 0.035em 0 #4b5563,
+      -0.05em -0.05em 0 #6b7280;
+  }
+  50% {
+    text-shadow: 
+      0.05em 0.035em 0 #374151, 
+      0.03em 0 0 #4b5563,
+      0 -0.04em 0 #6b7280;
+  }
+  99% {
+    text-shadow: 
+      0.05em 0.035em 0 #374151, 
+      0.03em 0 0 #4b5563,
+      0 -0.04em 0 #6b7280;
+  }
+  100% {
+    text-shadow: 
+      -0.05em 0 0 #374151, 
+      -0.025em -0.04em 0 #4b5563,
+      -0.04em -0.025em 0 #6b7280;
+  }
+}
