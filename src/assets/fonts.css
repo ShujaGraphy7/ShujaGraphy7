@@ -1,0 +1,80 @@
+/* Terminal Fonts */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('./fonts/JetBrainsMono-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fira Code';
+  src: url('./fonts/FiraCode-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src: url('./fonts/SourceCodePro-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cascadia Code';
+  src: url('./fonts/CascadiaCode-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Hack';
+  src: url('./fonts/Hack-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* CSS Variables for easy font usage */
+:root {
+  --font-jetbrains: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', 'Cascadia Code', 'Hack', monospace;
+  --font-fira: 'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Cascadia Code', 'Hack', monospace;
+  --font-source: 'Source Code Pro', 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Hack', monospace;
+  --font-cascadia: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Source Code Pro', 'Hack', monospace;
+  --font-hack: 'Hack', 'JetBrains Mono', 'Fira Code', 'Source Code Pro', 'Cascadia Code', monospace;
+}
+
+/* Utility classes for each font */
+.font-jetbrains {
+  font-family: var(--font-jetbrains);
+}
+
+.font-fira {
+  font-family: var(--font-fira);
+}
+
+.font-source {
+  font-family: var(--font-source);
+}
+
+.font-cascadia {
+  font-family: var(--font-cascadia);
+}
+
+.font-hack {
+  font-family: var(--font-hack);
+}
+
+/* Default terminal font for the entire app */
+body {
+  font-family: var(--font-jetbrains);
+}
+
+/* Code elements default to terminal fonts */
+code, pre, kbd, samp {
+  font-family: var(--font-fira);
+}

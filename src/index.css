@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    font-family: 'Fira Code', monospace;
+    font-family: var(--font-jetbrains), monospace;
     background-color: #000000;
     color: #ffffff;
     overflow-x: hidden;
@@ -36,13 +35,15 @@
 
 @layer components {
   .terminal-text {
-    @apply font-mono text-white;
+    @apply text-white;
+    font-family: var(--font-jetbrains), monospace;
   }
   
   .terminal-button {
-    @apply bg-black border border-white text-white px-4 py-2 font-mono 
+    @apply bg-black border border-white text-white px-4 py-2 
            hover:bg-white hover:text-black transition-all duration-300
            focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50;
+    font-family: var(--font-jetbrains), monospace;
   }
   
   .glitch-text {

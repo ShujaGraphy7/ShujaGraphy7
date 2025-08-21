@@ -141,9 +141,10 @@ function App() {
   }
 
   return (
-    <div className={`min-h-screen font-mono overflow-x-hidden transition-colors duration-300 ${
+    <div className={`min-h-screen overflow-x-hidden transition-colors duration-300 ${
       isDarkTheme ? 'bg-black text-white' : 'bg-gray-50 text-gray-800'
-    } ${scrollGlitch ? 'animate-pulse' : ''}`}>
+    } ${scrollGlitch ? 'animate-pulse' : ''}`}
+    style={{ fontFamily: 'var(--font-jetbrains), monospace' }}>
       {/* Terminal Header */}
       <motion.div 
         className={`relative py-8 border-b transition-colors duration-300 ${
@@ -159,11 +160,12 @@ function App() {
         <div className="absolute top-4 right-4 z-10">
           <button
             onClick={() => setIsDarkTheme(!isDarkTheme)}
-            className={`px-3 py-1 text-xs font-mono border rounded transition-all duration-300 ${
+            className={`px-3 py-1 text-xs border rounded transition-all duration-300 ${
               isDarkTheme 
                 ? 'border-white/50 text-white hover:bg-white hover:text-black' 
                 : 'border-gray-800/50 text-gray-800 hover:bg-gray-800 hover:text-white'
             }`}
+            style={{ fontFamily: 'var(--font-jetbrains), monospace' }}
           >
             {isDarkTheme ? '[ LIGHT ]' : '[ DARK ]'}
           </button>
@@ -172,9 +174,10 @@ function App() {
         {/* Terminal Window Frame */}
         <div className={`max-w-4xl mx-auto ${isDarkTheme ? 'bg-black border-white/50' : 'bg-white border-gray-800/50'} border rounded-lg p-6 shadow-2xl ${isDarkTheme ? 'shadow-white/20' : 'shadow-gray-800/20'} relative`}>
           {/* Contact Info - Top Center */}
-          <div className={`absolute top-2 md:top-4 left-1/2 transform -translate-x-1/2 text-xs md:text-sm font-mono ${
+          <div className={`absolute top-2 md:top-4 left-1/2 transform -translate-x-1/2 text-xs md:text-sm ${
             isDarkTheme ? 'text-green-400' : 'text-green-600'
-          } ${scrollGlitch ? 'animate-ping' : ''}`}>
+          } ${scrollGlitch ? 'animate-ping' : ''}`}
+          style={{ fontFamily: 'var(--font-jetbrains), monospace' }}>
             <span className={isDarkTheme ? 'text-white' : 'text-gray-800'}>shuja@blockchain:~$ </span>
             <span className="inline-block min-w-[150px] md:min-w-[200px] lg:min-w-[250px] text-left">
               {contactText}
@@ -1111,6 +1114,7 @@ function App() {
           </motion.div>
         </div>
       </motion.section>
+
 
       {/* Contact & Social Media */}
       <motion.section 
