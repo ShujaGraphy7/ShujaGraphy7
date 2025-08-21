@@ -26,6 +26,9 @@ function App() {
   const [contactIndex, setContactIndex] = useState(0)
   const [isTyping, setIsTyping] = useState(true)
   const [scrollGlitch, setScrollGlitch] = useState(false)
+  const [currentSection, setCurrentSection] = useState('ABOUT_ME')
+  const [headerVisible, setHeaderVisible] = useState(false)
+  const [hiddenSectionTitle, setHiddenSectionTitle] = useState(null)
   
   const typingTexts = useMemo(() => [
     "Blockchain Consultant",
@@ -112,7 +115,7 @@ function App() {
     }
   }, [contactIndex, contactInfo])
 
-  // Scroll glitch effect
+  // Scroll glitch effect and section detection
   useEffect(() => {
     const handleScroll = () => {
       // Trigger glitch effect randomly during scroll
@@ -120,6 +123,46 @@ function App() {
         setScrollGlitch(true)
         setTimeout(() => setScrollGlitch(false), 150)
       }
+
+      // Show header when section titles hit the top of screen
+      const currentScrollY = window.scrollY
+      const headerHeight = 80 // Approximate header height
+      
+      // Detect current section and show header when section title hits top
+      const sections = [
+        { id: 'ABOUT_ME', element: document.getElementById('about-me') },
+        { id: 'TECH_ARSENAL', element: document.getElementById('tech-stack') },
+        { id: 'EXPERIENCE_TIMELINE', element: document.getElementById('experience') },
+        { id: 'EDUCATION_CERTS', element: document.getElementById('education') },
+        { id: 'HIRE_ME', element: document.getElementById('hire-me') },
+        { id: 'PAYMENT_METHODS', element: document.getElementById('payment') },
+        { id: 'CONNECT', element: document.getElementById('connect') }
+      ]
+
+      let shouldShowHeader = false
+      let currentSectionFound = null
+      let sectionToHide = null
+      
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i]
+        if (section.element) {
+          const sectionTop = section.element.offsetTop
+          const sectionTitleTop = sectionTop + 20 // Offset to section title
+          
+          // Check if section title is at or above the top of viewport
+          if (sectionTitleTop <= currentScrollY + headerHeight) {
+            shouldShowHeader = true
+            currentSectionFound = section.id
+            sectionToHide = section.id
+          }
+        }
+      }
+      
+      setHeaderVisible(shouldShowHeader)
+      if (currentSectionFound) {
+        setCurrentSection(currentSectionFound)
+      }
+      setHiddenSectionTitle(sectionToHide)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: false })
@@ -318,9 +361,44 @@ function App() {
         </div>
       </motion.div>
 
-                {/* About Me */}
+                {/* Sticky Header Container */}
+      <motion.div 
+        className={`fixed top-0 left-0 right-0 z-50 ${
+          isDarkTheme 
+            ? 'bg-black border-b border-white/20' 
+            : 'bg-gray-50 border-b border-gray-800/20'
+        }`}
+        initial={{ y: -100 }}
+        animate={{ y: headerVisible ? 0 : -100 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+      >
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <motion.h2 
+            className={`text-2xl font-bold text-left transition-colors duration-300 ${
+              isDarkTheme ? 'text-white' : 'text-gray-800'
+            }`}
+            key={currentSection}
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            {currentSection === 'ABOUT_ME' && <FaUserTie className="inline mr-3" />}
+            {currentSection === 'TECH_ARSENAL' && <FaCode className="inline mr-3" />}
+            {currentSection === 'EXPERIENCE_TIMELINE' && <FaBriefcase className="inline mr-3" />}
+            {currentSection === 'EDUCATION_CERTS' && <FaGraduationCap className="inline mr-3" />}
+            {currentSection === 'HIRE_ME' && <FaRocket className="inline mr-3" />}
+            {currentSection === 'PAYMENT_METHODS' && <FaShieldAlt className="inline mr-3" />}
+            {currentSection === 'CONNECT' && <FaShieldAlt className="inline mr-3" />}
+            [ {currentSection.replace('_', ' ')} ]
+          </motion.h2>
+        </div>
+      </motion.div>
+
+      {/* About Me */}
           <motion.section 
-            className="py-16 px-4 max-w-4xl mx-auto"
+            id="about-me"
+            className="py-16 px-4 max-w-4xl mx-auto mt-20"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.2 }}
@@ -337,7 +415,7 @@ function App() {
             }}
           >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 ${
+          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
@@ -345,25 +423,29 @@ function App() {
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
           whileHover={{
             x: [0, -2, 2, 0],
             transition: { duration: 0.6, ease: "easeInOut" }
           }}
+          animate={{
+            opacity: hiddenSectionTitle === 'ABOUT_ME' ? 0 : 1,
+            y: hiddenSectionTitle === 'ABOUT_ME' ? -20 : 0
+          }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
         >
           <FaUserTie className="inline mr-3" />
           [ ABOUT_ME ]
         </motion.h2>
         
         <motion.div 
-          className="text-center mb-8"
+          className="text-left mb-8"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 1.8, ease: "easeOut" }}
         >
           <motion.p 
-            className={`text-xl mb-4 ${
+            className={`text-xl mb-4 text-justify ${
               isDarkTheme ? 'text-white' : 'text-gray-800'
             }`}
             initial={{ opacity: 0, scale: 0.9 }}
@@ -378,7 +460,7 @@ function App() {
             🌟 <strong>Blockchain Consultant | Full-Stack Developer | Web3 Innovator</strong>
           </motion.p>
           <motion.div 
-            className="space-y-3 text-lg"
+            className="space-y-3 text-lg text-justify"
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.2 }}
@@ -448,6 +530,7 @@ function App() {
 
       {/* Tech Stack */}
       <motion.section 
+        id="tech-stack"
         className="py-16 px-4 max-w-4xl mx-auto"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -465,7 +548,7 @@ function App() {
         }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 ${
+          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
@@ -615,6 +698,7 @@ function App() {
 
       {/* Experience Timeline */}
       <motion.section 
+        id="experience"
         className="py-16 px-4 max-w-4xl mx-auto"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -632,7 +716,7 @@ function App() {
         }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 ${
+          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
@@ -716,6 +800,7 @@ function App() {
 
       {/* Education & Certifications */}
       <motion.section 
+        id="education"
         className="py-16 px-4 max-w-4xl mx-auto"
         variants={staggerContainer}
         initial="initial"
@@ -723,7 +808,7 @@ function App() {
         viewport={{ once: true }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 ${
+          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
@@ -798,6 +883,7 @@ function App() {
 
       {/* Freelance Platforms */}
       <motion.section 
+        id="hire-me"
         className="py-16 px-4 max-w-4xl mx-auto"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -815,7 +901,7 @@ function App() {
         }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 ${
+          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
@@ -909,6 +995,7 @@ function App() {
 
             {/* Payment Methods */}
       <motion.section 
+        id="payment"
         className="py-16 px-4 max-w-4xl mx-auto"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -926,7 +1013,7 @@ function App() {
         }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 ${
+          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
@@ -940,7 +1027,7 @@ function App() {
             transition: { duration: 0.6, ease: "easeInOut" }
           }}
         >
-          <FaShieldAlt className="inline mr-3" />
+          <FaShieldAlt className="inline mr-4" />
           [ PAYMENT_METHODS ]
         </motion.h2>
         
@@ -1118,6 +1205,7 @@ function App() {
 
       {/* Contact & Social Media */}
       <motion.section 
+        id="connect"
         className="py-16 px-4 max-w-4xl mx-auto"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -1135,7 +1223,7 @@ function App() {
         }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 ${
+          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
