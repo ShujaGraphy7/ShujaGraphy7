@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion'
 
@@ -17,6 +17,9 @@ const ChatBot = ({ isDarkTheme }) => {
   ])
   const [newMessage, setNewMessage] = useState('')
   const [isChatTyping, setIsChatTyping] = useState(false)
+  const [typingText, setTypingText] = useState('')
+  const [cursorVisible, setCursorVisible] = useState(true)
+  const messagesEndRef = useRef(null)
 
   // Chat functions
   const handleSendMessage = () => {
@@ -32,18 +35,43 @@ const ChatBot = ({ isDarkTheme }) => {
     setChatMessages(prev => [...prev, userMessage])
     setNewMessage('')
     
-    // Simulate AI response
+    // Simulate AI response with typing effect
     setIsChatTyping(true)
-    setTimeout(() => {
-      const aiResponse = {
-        id: chatMessages.length + 2,
-        type: 'ai',
-        message: 'Thanks for your message! This is a demo response. I\'m here to help with any questions about blockchain development, web design, or my services.',
-        timestamp: new Date().toLocaleTimeString()
+    setTypingText('')
+    
+    const aiResponse = {
+      id: chatMessages.length + 2,
+      type: 'ai',
+      message: 'Thanks for your message! This is a demo response. I\'m here to help with any questions about blockchain development, web design, or my services.',
+      timestamp: new Date().toLocaleTimeString()
+    }
+    
+    // Simulate typing effect with delays
+    let currentText = ''
+    const fullText = aiResponse.message
+    const typingSpeed = 40 // milliseconds per character
+    const pauseDelay = 2000 // 2 second pause before starting to type
+    
+    const typeWriter = () => {
+      if (currentText.length < fullText.length) {
+        currentText += fullText[currentText.length]
+        setTypingText(currentText)
+        
+        // Add random delays for realistic typing
+        const randomDelay = typingSpeed + Math.random() * 50
+        setTimeout(typeWriter, randomDelay)
+      } else {
+        // Typing complete, add the full message
+        setTimeout(() => {
+          setChatMessages(prev => [...prev, aiResponse])
+          setIsChatTyping(false)
+          setTypingText('')
+        }, 1000) // 1 second delay before showing complete message
       }
-      setChatMessages(prev => [...prev, aiResponse])
-      setIsChatTyping(false)
-    }, 1500)
+    }
+    
+    // Start typing after initial delay
+    setTimeout(typeWriter, pauseDelay)
   }
 
   // Window control functions
@@ -73,6 +101,25 @@ const ChatBot = ({ isDarkTheme }) => {
       handleSendMessage()
     }
   }
+
+  // Cursor blinking effect
+  useEffect(() => {
+    const cursorInterval = setInterval(() => {
+      setCursorVisible(prev => !prev)
+    }, 500)
+    
+    return () => clearInterval(cursorInterval)
+  }, [])
+
+  // Auto-scroll to bottom
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  // Scroll to bottom when new messages arrive or typing
+  useEffect(() => {
+    scrollToBottom()
+  }, [chatMessages, typingText])
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -228,23 +275,27 @@ const ChatBot = ({ isDarkTheme }) => {
                 }`}>
                   <div className="flex items-center space-x-2 mb-1">
                     <span className={`text-xs ${
-                      isDarkTheme ? 'text-green-400' : 'text-green-600'
+                      isDarkTheme ? 'text-gray-400' : 'text-gray-600'
                     }`}>ai@terminal:~$</span>
                   </div>
-                  <div className="flex space-x-1">
-                    <div className={`w-2 h-2 rounded-full animate-bounce ${
-                      isDarkTheme ? 'bg-gray-400' : 'bg-gray-600'
-                    }`} style={{ animationDelay: '0ms' }}></div>
-                    <div className={`w-2 h-2 rounded-full animate-bounce ${
-                      isDarkTheme ? 'bg-gray-400' : 'bg-gray-600'
-                    }`} style={{ animationDelay: '150ms' }}></div>
-                    <div className={`w-2 h-2 rounded-full animate-bounce ${
-                      isDarkTheme ? 'bg-gray-400' : 'bg-gray-600'
-                    }`} style={{ animationDelay: '300ms' }}></div>
+                  <div className="flex items-center space-x-2">
+                    <span className={`text-sm ${
+                      isDarkTheme ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                      {typingText}
+                      <span className={`ml-1 font-bold ${
+                        cursorVisible ? 'opacity-100' : 'opacity-0'
+                      } transition-opacity duration-100`}>
+                        █
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
             )}
+            
+            {/* Auto-scroll anchor */}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Chat Input */}
