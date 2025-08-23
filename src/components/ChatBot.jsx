@@ -20,6 +20,9 @@ const ChatBot = ({ isDarkTheme }) => {
   const [typingText, setTypingText] = useState('')
   const [cursorVisible, setCursorVisible] = useState(true)
   const messagesEndRef = useRef(null)
+  const [isResizing, setIsResizing] = useState(false)
+  const [chatSize, setChatSize] = useState({ width: 320, height: 384 })
+  const chatBoxRef = useRef(null)
 
   // Chat functions
   const handleSendMessage = () => {
@@ -78,14 +81,25 @@ const ChatBot = ({ isDarkTheme }) => {
   const handleMinimize = () => {
     setIsMinimized(true)
     setIsMaximized(false)
+    // Keep current size when minimizing
   }
 
   const handleMaximize = () => {
     if (isMaximized) {
-      setIsMaximized(false)
+      // If already maximized, expand to larger size
+      if (chatSize.width === 384 && chatSize.height === 512) {
+        // Currently maximized, expand to larger size
+        setChatSize({ width: 480, height: 600 })
+      } else {
+        // Currently expanded, go back to normal
+        setIsMaximized(false)
+        setChatSize({ width: 320, height: 384 })
+      }
     } else {
+      // Normal to maximized
       setIsMaximized(true)
       setIsMinimized(false)
+      setChatSize({ width: 384, height: 512 })
     }
   }
 
@@ -93,6 +107,7 @@ const ChatBot = ({ isDarkTheme }) => {
     setIsChatOpen(false)
     setIsMinimized(false)
     setIsMaximized(false)
+    setChatSize({ width: 320, height: 384 }) // Reset to default size
   }
 
   const handleKeyPress = (e) => {
@@ -120,6 +135,57 @@ const ChatBot = ({ isDarkTheme }) => {
   useEffect(() => {
     scrollToBottom()
   }, [chatMessages, typingText])
+
+  // Handle resize functionality
+  const [resizeMode, setResizeMode] = useState(null)
+
+  const handleMouseMove = (e) => {
+    if (!isResizing || !resizeMode) return
+    
+    const rect = chatBoxRef.current?.getBoundingClientRect()
+    if (!rect) return
+    
+    let newWidth = chatSize.width
+    let newHeight = chatSize.height
+    
+    if (resizeMode === 'left') {
+      // Resize from left edge - calculate new width based on mouse position
+      const newLeft = e.clientX
+      newWidth = rect.right - newLeft
+      // Minimum size is maximized size (384), maximum is 50% of screen
+      newWidth = Math.max(384, Math.min(window.innerWidth * 0.5, newWidth))
+
+    }
+    
+    if (resizeMode === 'top') {
+      // Resize from top edge - calculate new height based on mouse position
+      const newTop = e.clientY
+      newHeight = rect.bottom - newTop
+      // Minimum size is maximized size (512), maximum is 75% of screen
+      newHeight = Math.max(512, Math.min(window.innerHeight * 0.75, newHeight))
+
+    }
+    
+    setChatSize({ width: newWidth, height: newHeight })
+  }
+
+  const handleMouseUp = () => {
+    setIsResizing(false)
+    setResizeMode(null)
+  }
+
+  // Add global mouse event listeners
+  useEffect(() => {
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('mouseup', handleMouseUp)
+      }
+    }
+  }, [isResizing])
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -165,11 +231,16 @@ const ChatBot = ({ isDarkTheme }) => {
       {/* Chat Window */}
       {isChatOpen && !isMinimized && (
         <motion.div
-          className={`${isMaximized ? 'w-96 h-[32rem]' : 'w-80 h-96'} shadow-2xl flex flex-col font-mono ${
+          ref={chatBoxRef}
+          className={`shadow-2xl flex flex-col font-mono relative ${
             isDarkTheme 
               ? 'bg-gray-900' 
               : 'bg-gray-50'
           }`}
+          style={{
+            width: `${chatSize.width}px`,
+            height: `${chatSize.height}px`
+          }}
           initial={{ scale: 0, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
@@ -211,7 +282,11 @@ const ChatBot = ({ isDarkTheme }) => {
                   className={`w-3 h-3 rounded-full hover:bg-gray-600 transition-all duration-200 cursor-pointer relative flex items-center justify-center ${
                     isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'
                   }`}
-                  title={isMaximized ? "Restore" : "Maximize"}
+                  title={
+                    isMaximized 
+                      ? (chatSize.width === 384 && chatSize.height === 512 ? "Expand" : "Restore")
+                      : "Maximize"
+                  }
                 >
                   <svg className={`w-2.5 h-2.5 ${
                     isDarkTheme ? 'text-gray-200' : 'text-gray-800'
@@ -231,6 +306,47 @@ const ChatBot = ({ isDarkTheme }) => {
               </span>
             </div>
           </div>
+
+          {/* Old School Loading Bar */}
+          {isChatTyping && (
+            <div className={`border-t ${
+              isDarkTheme ? 'border-gray-700' : 'border-gray-300'
+            }`}>
+              <div className={`p-2 ${
+                isDarkTheme ? 'bg-gray-800' : 'bg-gray-100'
+              }`}>
+                <div className="flex items-center space-x-2">
+                  <span className={`text-xs font-mono ${
+                    isDarkTheme ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
+                    [PROCESSING]
+                  </span>
+                  <div className="flex space-x-1">
+                    <div className={`w-1 h-3 ${
+                      isDarkTheme ? 'bg-gray-600' : 'bg-gray-400'
+                    } animate-pulse`}></div>
+                    <div className={`w-1 h-3 ${
+                      isDarkTheme ? 'bg-gray-600' : 'bg-gray-400'
+                    } animate-pulse`} style={{ animationDelay: '200ms' }}></div>
+                    <div className={`w-1 h-3 ${
+                      isDarkTheme ? 'bg-gray-600' : 'bg-gray-400'
+                    } animate-pulse`} style={{ animationDelay: '400ms' }}></div>
+                    <div className={`w-1 h-3 ${
+                      isDarkTheme ? 'bg-gray-600' : 'bg-gray-400'
+                    } animate-pulse`} style={{ animationDelay: '600ms' }}></div>
+                    <div className={`w-1 h-3 ${
+                      isDarkTheme ? 'bg-gray-600' : 'bg-gray-400'
+                    } animate-pulse`} style={{ animationDelay: '800ms' }}></div>
+                  </div>
+                  <span className={`text-xs font-mono ${
+                    isDarkTheme ? 'text-gray-500' : 'text-gray-500'
+                  }`}>
+                    AI_THINKING...
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Chat Messages */}
           <div className="flex-1 p-4 overflow-y-auto space-y-3 font-mono text-sm">
@@ -323,22 +439,58 @@ const ChatBot = ({ isDarkTheme }) => {
               <button
                 onClick={handleSendMessage}
                 disabled={!newMessage.trim()}
-                className={`w-8 h-8 rounded-full transition-all flex-shrink-0 flex items-center justify-center ${
+                className={`px-3 py-1 flex-shrink-0 font-mono text-xs ${
                   newMessage.trim()
-                    ? isDarkTheme 
-                      ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' 
-                      : 'bg-gray-600 text-white hover:bg-gray-500'
-                    : isDarkTheme 
-                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
-                      : 'bg-gray-300 text-gray-400 cursor-not-allowed'
+                    ? 'text-green-600 cursor-pointer' 
+                    : 'text-gray-400 cursor-not-allowed'
                 }`}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
+                [ send ]
               </button>
             </div>
           </div>
+
+          {/* Resize Handles - Show when in maximized mode */}
+          {isMaximized && (
+            <>
+              {/* Top resize handle */}
+              <div
+                className={`absolute top-0 left-0 right-0 h-2 cursor-ns-resize ${
+                  isDarkTheme ? 'hover:bg-gray-700/50' : 'hover:bg-gray-300/50'
+                }`}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+
+                  setIsResizing(true)
+                  setResizeMode('top')
+                }}
+              />
+              
+              {/* Left resize handle */}
+              <div
+                className={`absolute top-0 left-0 bottom-0 w-2 cursor-ew-resize ${
+                  isDarkTheme ? 'hover:bg-gray-700/50' : 'hover:bg-gray-300/50'
+                }`}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+
+                  setIsResizing(true)
+                  setResizeMode('left')
+                }}
+              />
+            </>
+          )}
+
+
+
+          {/* Resize hint for expanded view */}
+          {isMaximized && (
+            <div className={`absolute top-2 right-2 text-xs font-mono ${
+              isDarkTheme ? 'text-gray-500' : 'text-gray-400'
+            }`}>
+              Drag edges to resize
+            </div>
+          )}
         </motion.div>
       )}
     </div>
