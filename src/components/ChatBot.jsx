@@ -1,20 +1,18 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion'
+import aiService from '../services/aiService'
+import { useShujaAI } from '../hooks/useShujaAI.js'
 
 const ChatBot = ({ isDarkTheme }) => {
+  // AI Hook
+  const { generateResponse } = useShujaAI()
+  
   // Chat bot states
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
   const [isMaximized, setIsMaximized] = useState(false)
-  const [chatMessages, setChatMessages] = useState([
-    {
-      id: 1,
-      type: 'ai',
-      message: 'Hello! I\'m your AI assistant. How can I help you today?',
-      timestamp: new Date().toLocaleTimeString()
-    }
-  ])
+  const [chatMessages, setChatMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
   const [isChatTyping, setIsChatTyping] = useState(false)
   const [typingText, setTypingText] = useState('')
@@ -57,15 +55,15 @@ const ChatBot = ({ isDarkTheme }) => {
     return () => clearTimeout(highlightTimer)
   }, [])
   
-  // Hide highlight permanently if chat is manually opened
+  // Hide highlight permanently if chat is opened (either manually or automatically)
   useEffect(() => {
-    if (isChatOpen && !hasAutoOpened) {
-      console.log('Chat manually opened - hiding highlight permanently')
+    if (isChatOpen || hasAutoOpened) {
+      console.log('Chat opened or auto-opened - hiding highlight permanently')
       setShowHighlight(false)
     }
   }, [isChatOpen, hasAutoOpened])
   
-  // Auto-open chat after 30-45 seconds of scrolling
+    // Auto-open chat after 30-45 seconds of scrolling
   useEffect(() => {
     if (hasAutoOpened) return
     
@@ -89,12 +87,12 @@ const ChatBot = ({ isDarkTheme }) => {
             // Add welcome message after a short delay
             setTimeout(() => {
               const welcomeMessage = {
-                id: Date.now(), // Use timestamp instead of chatMessages.length
+                id: Date.now() + Math.random(), // Ensure unique ID
                 type: 'ai',
                 message: "Hey there! 👋 I noticed you've been exploring my website. I'm Shuja, a blockchain developer and web designer. Feel free to ask me anything about my work, services, or just say hello! What would you like to know?",
                 timestamp: new Date().toLocaleTimeString()
               }
-              setChatMessages(prev => [...prev, welcomeMessage])
+              setChatMessages([welcomeMessage]) // Set as first message, not append
             }, 1000)
           }
         }, randomDelay)
@@ -107,14 +105,14 @@ const ChatBot = ({ isDarkTheme }) => {
     return () => {
       clearTimeout(autoOpenTimer)
     }
-  }, [hasAutoOpened, isChatOpen]) // Removed chatMessages.length dependency
+  }, [hasAutoOpened]) // Only depend on hasAutoOpened - don't restart timer when chat closes
 
   // Chat functions
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (newMessage.trim() === '') return
     
     const userMessage = {
-      id: chatMessages.length + 1,
+      id: Date.now() + Math.random(), // Ensure unique ID
       type: 'user',
       message: newMessage,
       timestamp: new Date().toLocaleTimeString()
@@ -123,50 +121,70 @@ const ChatBot = ({ isDarkTheme }) => {
     setChatMessages(prev => [...prev, userMessage])
     setNewMessage('')
     
-    // Simulate AI response with typing effect
+    // Show typing indicator
     setIsChatTyping(true)
     setTypingText('')
     
-    const aiResponse = {
-      id: chatMessages.length + 2,
-      type: 'ai',
-      message: 'Thanks for your message! This is a demo response. I\'m here to help with any questions about blockchain development, web design, or my services.',
-      timestamp: new Date().toLocaleTimeString()
-    }
-    
-    // Simulate typing effect with delays
-    let currentText = ''
-    const fullText = aiResponse.message
-    const typingSpeed = 40 // milliseconds per character
-    const pauseDelay = 2000 // 2 second pause before starting to type
-    
-    const typeWriter = () => {
-      if (currentText.length < fullText.length) {
-        currentText += fullText[currentText.length]
-        setTypingText(currentText)
-        
-        // Add random delays for realistic typing
-        const randomDelay = typingSpeed + Math.random() * 50
-        setTimeout(typeWriter, randomDelay)
-      } else {
-        // Typing complete, add the full message
-        setTimeout(() => {
-          setChatMessages(prev => [...prev, aiResponse])
-          setIsChatTyping(false)
-          setTypingText('')
-        }, 1000) // 1 second delay before showing complete message
+    try {
+      // Get AI response using our custom hook
+      const aiResponse = await generateResponse(newMessage, aiService)
+      
+      // Ensure AI response has unique ID
+      const uniqueAiResponse = {
+        ...aiResponse,
+        id: Date.now() + Math.random() + 1 // Ensure unique ID
       }
+      
+      // Simulate typing effect with delays
+      let currentText = ''
+      const fullText = uniqueAiResponse.message
+      const typingSpeed = 40 // milliseconds per character
+      const pauseDelay = 1000 // 1 second pause before starting to type
+      
+      const typeWriter = () => {
+        if (currentText.length < fullText.length) {
+          currentText += fullText[currentText.length]
+          setTypingText(currentText)
+          
+          // Add random delays for realistic typing
+          const randomDelay = typingSpeed + Math.random() * 50
+          setTimeout(typeWriter, randomDelay)
+        } else {
+          // Typing complete, add the full message
+          setTimeout(() => {
+            setChatMessages(prev => [...prev, uniqueAiResponse])
+            setIsChatTyping(false)
+            setTypingText('')
+          }, 500) // 0.5 second delay before showing complete message
+        }
+      }
+      
+      // Start typing after initial delay
+      setTimeout(typeWriter, pauseDelay)
+      
+    } catch (error) {
+      console.error('Error getting AI response:', error)
+      
+      // Fallback response on error
+      const fallbackResponse = {
+        id: Date.now() + Math.random() + 2, // Ensure unique ID
+        type: 'ai',
+        message: "I'm experiencing some technical difficulties right now. Please try again in a moment.",
+        timestamp: new Date().toLocaleTimeString()
+      }
+      
+      setChatMessages(prev => [...prev, fallbackResponse])
+      setIsChatTyping(false)
+      setTypingText('')
     }
-    
-    // Start typing after initial delay
-    setTimeout(typeWriter, pauseDelay)
   }
 
   // Window control functions
   const handleMinimize = () => {
     setIsMinimized(true)
     setIsMaximized(false)
-    // Keep current size when minimizing
+    // Keep session active - don't reset messages or state
+    // Just hide the chat window (but keep isChatOpen true for minimized state)
   }
 
   const handleMaximize = () => {
@@ -192,6 +210,16 @@ const ChatBot = ({ isDarkTheme }) => {
     setIsMinimized(false)
     setIsMaximized(false)
     setChatSize({ width: 480, height: 600 }) // Reset to expanded size
+    
+    // End session - reset everything
+    setChatMessages([])
+    setNewMessage('')
+    setIsChatTyping(false)
+    setTypingText('')
+    // Keep hasAutoOpened true - auto-open should never happen again once it has occurred
+    // Don't re-enable highlight - it should stay hidden permanently once chat has been opened
+    
+    // Note: autoOpenTimer is handled in useEffect cleanup
   }
 
   const handleKeyPress = (e) => {
@@ -276,7 +304,10 @@ const ChatBot = ({ isDarkTheme }) => {
       {/* Chat Bubble */}
       {!isChatOpen && (
         <motion.button
-          onClick={() => setIsChatOpen(true)}
+          onClick={() => {
+            setIsChatOpen(true)
+            setHasAutoOpened(true) // Mark as opened so auto-open never happens again
+          }}
           className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center relative ${
             isDarkTheme 
               ? 'bg-gray-800 text-white hover:bg-gray-700' 
@@ -331,14 +362,17 @@ const ChatBot = ({ isDarkTheme }) => {
       )}
 
       {/* Minimized State Indicator */}
-      {isChatOpen && isMinimized && (
+      {isMinimized && (
         <motion.div
           className={`w-32 h-8 shadow-lg flex items-center justify-center font-mono cursor-pointer ${
             isDarkTheme 
               ? 'bg-gray-900 text-gray-300' 
               : 'bg-gray-100 text-gray-700'
           }`}
-          onClick={() => setIsMinimized(false)}
+          onClick={() => {
+            setIsMinimized(false)
+            setIsChatOpen(true)
+          }}
           initial={{ scale: 0, opacity: 0, y: 20, rotateY: -90 }}
           animate={{ scale: 1, opacity: 1, y: 0, rotateY: 0 }}
           exit={{ scale: 0, opacity: 0, y: 20, rotateY: -90 }}
@@ -380,6 +414,7 @@ const ChatBot = ({ isDarkTheme }) => {
             y: { duration: 0.5, ease: "easeOut" }
           }}
         >
+
           {/* Terminal Header */}
           <div className={`flex items-center justify-between p-3 ${
             isDarkTheme ? 'bg-gray-800' : 'bg-gray-200'
