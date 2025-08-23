@@ -89,7 +89,7 @@ const ChatBot = ({ isDarkTheme }) => {
               const welcomeMessage = {
                 id: Date.now() + Math.random(), // Ensure unique ID
                 type: 'ai',
-                message: "Hey there! 👋 I noticed you've been exploring my website. I'm Shuja, a blockchain developer and web designer. Feel free to ask me anything about my work, services, or just say hello! What would you like to know?",
+                message: "Hey there! 👋 I noticed you've been exploring my website. I'm Shuja Abrar, a blockchain developer and web designer. Feel free to ask me anything about my work, services, or just say hello! What would you like to know?",
                 timestamp: new Date().toLocaleTimeString()
               }
               setChatMessages([welcomeMessage]) // Set as first message, not append
@@ -138,16 +138,16 @@ const ChatBot = ({ isDarkTheme }) => {
       // Simulate typing effect with delays
       let currentText = ''
       const fullText = uniqueAiResponse.message
-      const typingSpeed = 40 // milliseconds per character
-      const pauseDelay = 1000 // 1 second pause before starting to type
+      const typingSpeed = 25 // milliseconds per character (faster)
+      const pauseDelay = 500 // 0.5 second pause before starting to type (faster)
       
       const typeWriter = () => {
         if (currentText.length < fullText.length) {
           currentText += fullText[currentText.length]
           setTypingText(currentText)
           
-          // Add random delays for realistic typing
-          const randomDelay = typingSpeed + Math.random() * 50
+          // Add random delays for realistic typing (reduced range)
+          const randomDelay = typingSpeed + Math.random() * 25
           setTimeout(typeWriter, randomDelay)
         } else {
           // Typing complete, add the full message
@@ -155,7 +155,7 @@ const ChatBot = ({ isDarkTheme }) => {
             setChatMessages(prev => [...prev, uniqueAiResponse])
             setIsChatTyping(false)
             setTypingText('')
-          }, 500) // 0.5 second delay before showing complete message
+          }, 200) // 0.2 second delay before showing complete message (faster)
         }
       }
       
@@ -223,7 +223,7 @@ const ChatBot = ({ isDarkTheme }) => {
   }
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !isChatTyping) {
       e.preventDefault()
       handleSendMessage()
     }
@@ -307,6 +307,17 @@ const ChatBot = ({ isDarkTheme }) => {
           onClick={() => {
             setIsChatOpen(true)
             setHasAutoOpened(true) // Mark as opened so auto-open never happens again
+            
+            // Add welcome message for manual open
+            setTimeout(() => {
+              const welcomeMessage = {
+                id: Date.now() + Math.random(),
+                type: 'ai',
+                message: "Hey there! 👋 I'm Shuja Abrar. I'm a blockchain developer and web designer with a passion for creating innovative solutions. What would you like to know about my work or how can I help you today?",
+                timestamp: new Date().toLocaleTimeString()
+              }
+              setChatMessages([welcomeMessage])
+            }, 500)
           }}
           className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center relative ${
             isDarkTheme 
@@ -616,24 +627,31 @@ const ChatBot = ({ isDarkTheme }) => {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Enter message..."
+                  placeholder={isChatTyping ? "AI is typing..." : "Enter message..."}
+                  disabled={isChatTyping}
                   className={`w-full px-2 py-1 bg-transparent border-none outline-none font-mono text-sm ${
                     isDarkTheme 
-                      ? 'text-gray-200 placeholder-gray-500' 
-                      : 'text-gray-800 placeholder-gray-400'
+                      ? isChatTyping 
+                        ? 'text-gray-500 placeholder-gray-600' 
+                        : 'text-gray-200 placeholder-gray-500'
+                      : isChatTyping 
+                        ? 'text-gray-400 placeholder-gray-500' 
+                        : 'text-gray-800 placeholder-gray-400'
                   }`}
                 />
               </div>
               <button
                 onClick={handleSendMessage}
-                disabled={!newMessage.trim()}
+                disabled={!newMessage.trim() || isChatTyping}
                 className={`px-3 py-1 flex-shrink-0 font-mono text-xs ${
-                  newMessage.trim()
-                    ? 'text-green-600 cursor-pointer' 
-                    : 'text-gray-400 cursor-not-allowed'
+                  isChatTyping
+                    ? 'text-gray-400 cursor-not-allowed'
+                    : newMessage.trim()
+                      ? 'text-green-600 cursor-pointer' 
+                      : 'text-gray-400 cursor-not-allowed'
                 }`}
               >
-                [ send ]
+                {isChatTyping ? '[ typing... ]' : '[ send ]'}
               </button>
             </div>
           </div>
