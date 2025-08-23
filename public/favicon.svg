@@ -1,0 +1,31 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Terminal background -->
+  <rect width="32" height="32" fill="#000000" rx="2" ry="2"/>
+  
+  <!-- Terminal border -->
+  <rect x="1" y="1" width="30" height="30" fill="none" stroke="#00ff00" stroke-width="1" rx="1" ry="1"/>
+  
+  <!-- Terminal header dots (like old CRT monitors) -->
+  <circle cx="4" cy="4" r="1" fill="#333333"/>
+  <circle cx="7" cy="4" r="1" fill="#666666"/>
+  <circle cx="10" cy="4" r="1" fill="#999999"/>
+  
+  <!-- Terminal "S" in green monospace style -->
+  <g fill="#00ff00">
+    <!-- Top horizontal line -->
+    <rect x="8" y="8" width="16" height="2" fill="#00ff00"/>
+    <!-- Left vertical (top part) -->
+    <rect x="8" y="8" width="2" height="6" fill="#00ff00"/>
+    <!-- Middle horizontal line -->
+    <rect x="8" y="14" width="16" height="2" fill="#00ff00"/>
+    <!-- Right vertical (bottom part) -->
+    <rect x="22" y="16" width="2" height="6" fill="#00ff00"/>
+    <!-- Bottom horizontal line -->
+    <rect x="8" y="22" width="16" height="2" fill="#00ff00"/>
+  </g>
+  
+  <!-- Terminal cursor blink effect -->
+  <rect x="26" y="22" width="2" height="2" fill="#00ff00">
+    <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+  </rect>
+</svg>

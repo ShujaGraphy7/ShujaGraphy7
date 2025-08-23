@@ -2,7 +2,53 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon-s.svg" />
+    <link rel="alternate icon" href="/favicon-s.svg" />
+    <link rel="apple-touch-icon" href="/favicon-s.svg" />
+    <script>
+      // Inline favicon animator to ensure it runs after DOM loads
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, starting favicon animation...');
+        
+        const favicons = [
+          '/favicon-s.svg',
+          '/favicon-h.svg',
+          '/favicon-u.svg',
+          '/favicon-j.svg',
+          '/favicon-a.svg'
+        ];
+        
+        let currentIndex = 0;
+        const faviconElement = document.querySelector('link[rel="icon"]');
+        
+        console.log('Found favicon element:', faviconElement);
+        
+        function changeFavicon() {
+          const newFavicon = favicons[currentIndex] + '?v=' + Date.now();
+          
+          // Remove old favicon
+          const oldFavicon = document.querySelector('link[rel="icon"]');
+          if (oldFavicon) {
+            oldFavicon.remove();
+          }
+          
+          // Create new favicon element
+          const newFaviconElement = document.createElement('link');
+          newFaviconElement.rel = 'icon';
+          newFaviconElement.type = 'image/svg+xml';
+          newFaviconElement.href = newFavicon;
+          document.head.appendChild(newFaviconElement);
+          
+          currentIndex = (currentIndex + 1) % favicons.length;
+        }
+        
+        // Change favicon every 2 seconds to make it more noticeable
+        setInterval(changeFavicon, 1000);
+        
+        // Initial favicon
+        changeFavicon();
+      });
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Shuja Abrar - Blockchain Consultant, Full-Stack Developer & Web3 Innovator. Specialized in Solidity, Rust, DeFi, NFTs and Smart Contracts." />
     <meta name="keywords" content="blockchain, developer, solidity, rust, defi, nft, web3, smart contracts, ethereum, solana" />

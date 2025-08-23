@@ -1,0 +1,21 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Terminal background -->
+  <rect width="32" height="32" fill="#000000"/>
+  
+  <!-- Terminal border -->
+  <rect x="0" y="0" width="32" height="32" fill="none" stroke="#00ff00" stroke-width="1"/>
+  
+  <!-- Terminal "S" in pixelated green style -->
+  <g fill="#00ff00">
+    <!-- Top horizontal line of S -->
+    <rect x="6" y="6" width="20" height="3"/>
+    <!-- Left vertical (top part) -->
+    <rect x="6" y="6" width="3" height="9"/>
+    <!-- Middle horizontal line -->
+    <rect x="6" y="15" width="20" height="3"/>
+    <!-- Right vertical (bottom part) -->
+    <rect x="23" y="15" width="3" height="9"/>
+    <!-- Bottom horizontal line -->
+    <rect x="6" y="24" width="20" height="3"/>
+  </g>
+</svg>
