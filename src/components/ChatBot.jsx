@@ -8,6 +8,78 @@ const ChatBot = ({ isDarkTheme }) => {
   // AI Hook
   const { generateResponse } = useShujaAI()
   
+  // Scroll to section functionality
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      })
+      
+      // Add temporary highlight effect
+      element.style.transition = 'all 0.3s ease'
+      element.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.5)'
+      element.style.transform = 'scale(1.02)'
+      
+      // Remove highlight after 2 seconds
+      setTimeout(() => {
+        element.style.boxShadow = ''
+        element.style.transform = ''
+      }, 2000)
+    }
+  }
+  
+  // Map chat keywords to website sections
+  const getSectionToScroll = (message) => {
+    const lowerMessage = message.toLowerCase()
+    
+    // About section
+    if (lowerMessage.includes('about') || lowerMessage.includes('who are you') || lowerMessage.includes('tell me about yourself')) {
+      return 'about-me'
+    }
+    
+    // Experience section
+    if (lowerMessage.includes('experience') || lowerMessage.includes('work') || lowerMessage.includes('career') || lowerMessage.includes('jobs')) {
+      return 'experience'
+    }
+    
+    // Skills/Technology section - EXPANDED to catch ALL skill questions
+    if (lowerMessage.includes('skills') || lowerMessage.includes('technologies') || lowerMessage.includes('what can you do') || lowerMessage.includes('expertise') || 
+        lowerMessage.includes('tech stack') || lowerMessage.includes('programming') || lowerMessage.includes('development') || lowerMessage.includes('coding') ||
+        lowerMessage.includes('react') || lowerMessage.includes('node') || lowerMessage.includes('javascript') || lowerMessage.includes('typescript') ||
+        lowerMessage.includes('html') || lowerMessage.includes('css') || lowerMessage.includes('tailwind') || lowerMessage.includes('figma') ||
+        lowerMessage.includes('docker') || lowerMessage.includes('git') || lowerMessage.includes('linux') || lowerMessage.includes('shopify') ||
+        lowerMessage.includes('wordpress') || lowerMessage.includes('woocommerce') || lowerMessage.includes('solidity') || lowerMessage.includes('rust') ||
+        lowerMessage.includes('blockchain') || lowerMessage.includes('defi') || lowerMessage.includes('nft') || lowerMessage.includes('smart contract') ||
+        lowerMessage.includes('mern') || lowerMessage.includes('mongodb') || lowerMessage.includes('express') || lowerMessage.includes('e-commerce') ||
+        lowerMessage.includes('design') || lowerMessage.includes('ui') || lowerMessage.includes('ux') || lowerMessage.includes('graphics')) {
+      return 'tech-stack'
+    }
+    
+    // Services/Hire section
+    if (lowerMessage.includes('services') || lowerMessage.includes('what do you offer') || lowerMessage.includes('offerings') || lowerMessage.includes('hire') || lowerMessage.includes('work with you')) {
+      return 'hire-me'
+    }
+    
+    // Education section
+    if (lowerMessage.includes('education') || lowerMessage.includes('degree') || lowerMessage.includes('university') || lowerMessage.includes('study')) {
+      return 'education'
+    }
+    
+    // Payment section
+    if (lowerMessage.includes('payment') || lowerMessage.includes('pricing') || lowerMessage.includes('cost') || lowerMessage.includes('rates')) {
+      return 'payment'
+    }
+    
+    // Contact/Connect section
+    if (lowerMessage.includes('contact') || lowerMessage.includes('get in touch') || lowerMessage.includes('email') || lowerMessage.includes('phone') || lowerMessage.includes('connect')) {
+      return 'connect'
+    }
+    
+    return null
+  }
+  
   // Chat bot states
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
@@ -120,6 +192,15 @@ const ChatBot = ({ isDarkTheme }) => {
     
     setChatMessages(prev => [...prev, userMessage])
     setNewMessage('')
+    
+    // Check if we should scroll to a section
+    const sectionToScroll = getSectionToScroll(newMessage)
+    if (sectionToScroll) {
+      // Small delay to let the message appear first
+      setTimeout(() => {
+        scrollToSection(sectionToScroll)
+      }, 500)
+    }
     
     // Show typing indicator
     setIsChatTyping(true)
