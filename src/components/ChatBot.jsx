@@ -94,6 +94,9 @@ const ChatBot = ({ isDarkTheme }) => {
   const [chatSize, setChatSize] = useState({ width: 480, height: 600 })
   const chatBoxRef = useRef(null)
   
+  // Ref to track typing effect timers for cleanup
+  const typingTimersRef = useRef([])
+  
 
   
   // Random resize hint display
@@ -104,17 +107,26 @@ const ChatBot = ({ isDarkTheme }) => {
   const [showHighlight, setShowHighlight] = useState(false)
   
   useEffect(() => {
+    let hintTimer
+    let hideTimer
+    
     const showHintRandomly = () => {
       // Show hint for 3 seconds every 15-30 seconds
       const delay = Math.random() * 15000 + 15000 // 15-30 seconds
-      setTimeout(() => {
+      hintTimer = setTimeout(() => {
         setShowResizeHint(true)
-        setTimeout(() => setShowResizeHint(false), 3000) // Hide after 3 seconds
+        hideTimer = setTimeout(() => setShowResizeHint(false), 3000) // Hide after 3 seconds
         showHintRandomly() // Schedule next hint
       }, delay)
     }
     
     showHintRandomly()
+    
+    // Cleanup function to clear all timers
+    return () => {
+      if (hintTimer) clearTimeout(hintTimer)
+      if (hideTimer) clearTimeout(hideTimer)
+    }
   }, [])
   
   // Show highlight after 5 seconds
@@ -229,19 +241,22 @@ const ChatBot = ({ isDarkTheme }) => {
           
           // Add random delays for realistic typing (reduced range)
           const randomDelay = typingSpeed + Math.random() * 25
-          setTimeout(typeWriter, randomDelay)
+          const timer = setTimeout(typeWriter, randomDelay)
+          typingTimersRef.current.push(timer)
         } else {
           // Typing complete, add the full message
-          setTimeout(() => {
+          const completionTimer = setTimeout(() => {
             setChatMessages(prev => [...prev, uniqueAiResponse])
             setIsChatTyping(false)
             setTypingText('')
           }, 200) // 0.2 second delay before showing complete message (faster)
+          typingTimersRef.current.push(completionTimer)
         }
       }
       
       // Start typing after initial delay
-      setTimeout(typeWriter, pauseDelay)
+      const startTimer = setTimeout(typeWriter, pauseDelay)
+      typingTimersRef.current.push(startTimer)
       
     } catch (error) {
       console.error('Error getting AI response:', error)
@@ -287,6 +302,7 @@ const ChatBot = ({ isDarkTheme }) => {
   }
 
   const handleClose = () => {
+    // Close chat window
     setIsChatOpen(false)
     setIsMinimized(false)
     setIsMaximized(false)
@@ -297,10 +313,23 @@ const ChatBot = ({ isDarkTheme }) => {
     setNewMessage('')
     setIsChatTyping(false)
     setTypingText('')
+    
+    // Reset cursor state
+    setCursorVisible(true)
+    
+    // Reset resize hint
+    setShowResizeHint(false)
+    
+    // Clean up all typing effect timers
+    typingTimersRef.current.forEach(timer => clearTimeout(timer))
+    typingTimersRef.current = []
+    
     // Keep hasAutoOpened true - auto-open should never happen again once it has occurred
     // Don't re-enable highlight - it should stay hidden permanently once chat has been opened
     
     // Note: autoOpenTimer is handled in useEffect cleanup
+    // Note: cursorInterval is handled in useEffect cleanup
+    // Note: resize hint timers are handled in useEffect cleanup
   }
 
   const handleKeyPress = (e) => {
@@ -317,6 +346,15 @@ const ChatBot = ({ isDarkTheme }) => {
     }, 500)
     
     return () => clearInterval(cursorInterval)
+  }, [])
+
+  // Cleanup all timers when component unmounts
+  useEffect(() => {
+    return () => {
+      // Clean up any remaining typing timers
+      typingTimersRef.current.forEach(timer => clearTimeout(timer))
+      typingTimersRef.current = []
+    }
   }, [])
 
   // Auto-scroll to bottom
