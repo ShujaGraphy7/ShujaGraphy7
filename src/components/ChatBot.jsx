@@ -895,8 +895,8 @@ const ChatBot = ({ isDarkTheme }) => {
           ref={chatBoxRef}
           className={`shadow-2xl flex flex-col font-mono relative ${
             isDarkTheme 
-              ? 'bg-gray-900' 
-              : 'bg-gray-50'
+              ? 'bg-gray-950 border-gray-700' 
+              : 'bg-white border-gray-200'
           }`}
           style={{
             width: `${chatSize.width}px`,
@@ -917,14 +917,16 @@ const ChatBot = ({ isDarkTheme }) => {
 
           {/* Terminal Header */}
           <div className={`flex items-center justify-between p-3 ${
-            isDarkTheme ? 'bg-gray-800' : 'bg-gray-200'
+            isDarkTheme 
+              ? 'bg-gray-800 border-gray-700' 
+              : 'bg-gray-100 border-gray-200'
           }`}>
             <div className="flex items-center space-x-2">
               <div className="flex items-center space-x-1.5">
                 <motion.button
                   onClick={handleClose}
                   className={`w-3 h-3 rounded-full cursor-pointer relative flex items-center justify-center ${
-                    isDarkTheme ? 'bg-gray-700' : 'bg-gray-300'
+                    isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'
                   }`}
                   whileHover={{ 
                     scale: 1.2, 
@@ -943,7 +945,7 @@ const ChatBot = ({ isDarkTheme }) => {
                 <motion.button
                   onClick={handleMinimize}
                   className={`w-3 h-3 rounded-full cursor-pointer relative flex items-center justify-center ${
-                    isDarkTheme ? 'bg-gray-600' : 'bg-gray-400'
+                    isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'
                   }`}
                   whileHover={{ 
                     scale: 1.2, 
@@ -1103,7 +1105,9 @@ const ChatBot = ({ isDarkTheme }) => {
           </div>
 
           {/* Chat Input */}
-          <div className="p-4">
+          <div className={`p-4 ${
+            isDarkTheme ? 'bg-gray-800 border-t border-gray-700' : 'bg-gray-100 border-t border-gray-300'
+          }`}>
             <div className="flex items-center space-x-2 min-w-0">
               <span className={`text-sm font-mono flex-shrink-0 ${
                 isDarkTheme ? 'text-gray-400' : 'text-gray-600'
@@ -1119,13 +1123,9 @@ const ChatBot = ({ isDarkTheme }) => {
                   placeholder={isChatTyping ? "AI is typing..." : "Enter message..."}
                   disabled={isChatTyping}
                   className={`w-full px-2 py-1 bg-transparent border-none outline-none font-mono text-sm ${
-                    isDarkTheme 
-                      ? isChatTyping 
-                        ? 'text-gray-500 placeholder-gray-600' 
-                        : 'text-gray-200 placeholder-gray-500'
-                      : isChatTyping 
-                        ? 'text-gray-400 placeholder-gray-500' 
-                        : 'text-gray-800 placeholder-gray-400'
+                    isChatTyping 
+                      ? isDarkTheme ? 'text-gray-500 placeholder-gray-600' : 'text-gray-400 placeholder-gray-500'
+                      : isDarkTheme ? 'text-gray-200 placeholder-gray-500' : 'text-gray-800 placeholder-gray-400'
                   }`}
                 />
               </div>
@@ -1150,17 +1150,9 @@ const ChatBot = ({ isDarkTheme }) => {
             <>
               {/* Top resize handle */}
               <motion.div
-                className={`absolute top-0 left-0 right-0 h-2 cursor-ns-resize ${
-                  isDarkTheme ? 'hover:bg-gray-700/50' : 'hover:bg-gray-300/50'
-                }`}
-                whileHover={{ 
-                  backgroundColor: isDarkTheme ? 'rgba(55, 65, 81, 0.8)' : 'rgba(209, 213, 219, 0.8)',
-                  height: '8px'
-                }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="absolute top-0 left-0 right-0 h-2 cursor-ns-resize"
                 onMouseDown={(e) => {
                   e.preventDefault()
-
                   setIsResizing(true)
                   setResizeMode('top')
                 }}
@@ -1168,17 +1160,9 @@ const ChatBot = ({ isDarkTheme }) => {
               
               {/* Left resize handle */}
               <motion.div
-                className={`absolute top-0 left-0 bottom-0 w-2 cursor-ew-resize ${
-                  isDarkTheme ? 'hover:bg-gray-700/50' : 'hover:bg-gray-300/50'
-                }`}
-                whileHover={{ 
-                  backgroundColor: isDarkTheme ? 'rgba(55, 65, 81, 0.8)' : 'rgba(209, 213, 219, 0.8)',
-                  width: '8px'
-                }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="absolute top-0 left-0 bottom-0 w-2 cursor-ew-resize"
                 onMouseDown={(e) => {
                   e.preventDefault()
-
                   setIsResizing(true)
                   setResizeMode('left')
                 }}
