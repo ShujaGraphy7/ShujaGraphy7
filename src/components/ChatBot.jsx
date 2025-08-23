@@ -203,7 +203,7 @@ const ChatBot = ({ isDarkTheme }) => {
         document.removeEventListener('mouseup', handleMouseUp)
       }
     }
-  }, [isResizing])
+  }, [isResizing, handleMouseMove])
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -211,16 +211,17 @@ const ChatBot = ({ isDarkTheme }) => {
       {!isChatOpen && (
         <motion.button
           onClick={() => setIsChatOpen(true)}
-          className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+          className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center ${
             isDarkTheme 
               ? 'bg-gray-800 text-white hover:bg-gray-700' 
               : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
           }`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          initial={{ scale: 0, opacity: 0, rotate: -90 }}
+          animate={{ scale: 1, opacity: 1, rotate: 0 }}
+          exit={{ scale: 0, opacity: 0, rotate: 90 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -255,7 +256,7 @@ const ChatBot = ({ isDarkTheme }) => {
 
       {/* Chat Window */}
       {isChatOpen && !isMinimized && (
-        <div
+        <motion.div
           ref={chatBoxRef}
           className={`shadow-2xl flex flex-col font-mono relative ${
             isDarkTheme 
@@ -265,6 +266,17 @@ const ChatBot = ({ isDarkTheme }) => {
           style={{
             width: `${chatSize.width}px`,
             height: `${chatSize.height}px`
+          }}
+          initial={{ opacity: 0, scale: 0.9, y: 50 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 50 }}
+          layout
+          transition={{ 
+            width: { duration: 0.5, ease: "easeOut" },
+            height: { duration: 0.5, ease: "easeOut" },
+            opacity: { duration: 0.5, ease: "easeOut" },
+            scale: { duration: 0.5, ease: "easeOut" },
+            y: { duration: 0.5, ease: "easeOut" }
           }}
         >
           {/* Terminal Header */}
@@ -547,7 +559,7 @@ const ChatBot = ({ isDarkTheme }) => {
               Drag edges to resize
             </motion.div>
           )}
-        </div>
+        </motion.div>
       )}
     </div>
   )
