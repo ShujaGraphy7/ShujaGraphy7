@@ -5,6 +5,8 @@ import { motion } from 'framer-motion'
 const ChatBot = ({ isDarkTheme }) => {
   // Chat bot states
   const [isChatOpen, setIsChatOpen] = useState(false)
+  const [isMinimized, setIsMinimized] = useState(false)
+  const [isMaximized, setIsMaximized] = useState(false)
   const [chatMessages, setChatMessages] = useState([
     {
       id: 1,
@@ -44,6 +46,27 @@ const ChatBot = ({ isDarkTheme }) => {
     }, 1500)
   }
 
+  // Window control functions
+  const handleMinimize = () => {
+    setIsMinimized(true)
+    setIsMaximized(false)
+  }
+
+  const handleMaximize = () => {
+    if (isMaximized) {
+      setIsMaximized(false)
+    } else {
+      setIsMaximized(true)
+      setIsMinimized(false)
+    }
+  }
+
+  const handleClose = () => {
+    setIsChatOpen(false)
+    setIsMinimized(false)
+    setIsMaximized(false)
+  }
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
@@ -59,8 +82,8 @@ const ChatBot = ({ isDarkTheme }) => {
           onClick={() => setIsChatOpen(true)}
           className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 ${
             isDarkTheme 
-              ? 'bg-white text-black hover:bg-gray-100' 
-              : 'bg-black text-white hover:bg-gray-800'
+              ? 'bg-gray-800 text-white hover:bg-gray-700' 
+              : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
           }`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
@@ -74,73 +97,125 @@ const ChatBot = ({ isDarkTheme }) => {
         </motion.button>
       )}
 
-      {/* Chat Window */}
-      {isChatOpen && (
+      {/* Minimized State Indicator */}
+      {isChatOpen && isMinimized && (
         <motion.div
-          className={`w-80 h-96 rounded-lg shadow-2xl flex flex-col ${
+          className={`w-32 h-8 shadow-lg flex items-center justify-center font-mono cursor-pointer ${
             isDarkTheme 
-              ? 'bg-black border border-white/20' 
-              : 'bg-white border border-gray-200'
+              ? 'bg-gray-900 text-gray-300' 
+              : 'bg-gray-100 text-gray-700'
+          }`}
+          onClick={() => setIsMinimized(false)}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.2 }}
+          title="Click to restore chat"
+        >
+          <span className="text-xs">💬 Chat</span>
+        </motion.div>
+      )}
+
+      {/* Chat Window */}
+      {isChatOpen && !isMinimized && (
+        <motion.div
+          className={`${isMaximized ? 'w-96 h-[32rem]' : 'w-80 h-96'} shadow-2xl flex flex-col font-mono ${
+            isDarkTheme 
+              ? 'bg-gray-900' 
+              : 'bg-gray-50'
           }`}
           initial={{ scale: 0, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          {/* Chat Header */}
-          <div className={`flex items-center justify-between p-4 border-b ${
-            isDarkTheme ? 'border-white/20' : 'border-gray-200'
+          {/* Terminal Header */}
+          <div className={`flex items-center justify-between p-3 ${
+            isDarkTheme ? 'bg-gray-800' : 'bg-gray-200'
           }`}>
-            <div className="flex items-center space-x-3">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                isDarkTheme ? 'bg-white/20' : 'bg-black/20'
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1.5">
+                <button
+                  onClick={handleClose}
+                  className={`w-3 h-3 rounded-full hover:bg-gray-600 transition-all duration-200 cursor-pointer relative flex items-center justify-center ${
+                    isDarkTheme ? 'bg-gray-700' : 'bg-gray-300'
+                  }`}
+                  title="Close"
+                >
+                  <svg className={`w-2.5 h-2.5 ${
+                    isDarkTheme ? 'text-gray-200' : 'text-gray-800'
+                  }`} fill="currentColor" viewBox="0 0 24 24" strokeWidth="4">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                  </svg>
+                </button>
+                <button
+                  onClick={handleMinimize}
+                  className={`w-3 h-3 rounded-full hover:bg-gray-600 transition-all duration-200 cursor-pointer relative flex items-center justify-center ${
+                    isDarkTheme ? 'bg-gray-600' : 'bg-gray-400'
+                  }`}
+                  title="Minimize"
+                >
+                  <svg className={`w-2.5 h-2.5 ${
+                    isDarkTheme ? 'text-gray-200' : 'text-gray-800'
+                  }`} fill="currentColor" viewBox="0 0 24 24" strokeWidth="4">
+                    <path d="M20 14H4v-2h16v2z"/>
+                  </svg>
+                </button>
+                <button
+                  onClick={handleMaximize}
+                  className={`w-3 h-3 rounded-full hover:bg-gray-600 transition-all duration-200 cursor-pointer relative flex items-center justify-center ${
+                    isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'
+                  }`}
+                  title={isMaximized ? "Restore" : "Maximize"}
+                >
+                  <svg className={`w-2.5 h-2.5 ${
+                    isDarkTheme ? 'text-gray-200' : 'text-gray-800'
+                  }`} fill="currentColor" viewBox="0 0 24 24" strokeWidth="4">
+                    {isMaximized ? (
+                      <path d="M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3"/>
+                    ) : (
+                      <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                    )}
+                  </svg>
+                </button>
+              </div>
+              <span className={`text-xs ml-3 ${
+                isDarkTheme ? 'text-gray-300' : 'text-gray-700'
               }`}>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className={`font-semibold ${
-                  isDarkTheme ? 'text-white' : 'text-gray-800'
-                }`}>AI Assistant</h3>
-                <p className={`text-xs ${
-                  isDarkTheme ? 'text-gray-400' : 'text-gray-500'
-                }`}>Online</p>
-              </div>
+                ai@terminal:~$ chat
+              </span>
             </div>
-            <button
-              onClick={() => setIsChatOpen(false)}
-              className={`p-1 rounded-full hover:bg-opacity-20 transition-colors ${
-                isDarkTheme ? 'hover:bg-white' : 'hover:bg-black'
-              }`}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
           </div>
 
           {/* Chat Messages */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-4">
+          <div className="flex-1 p-4 overflow-y-auto space-y-3 font-mono text-sm">
             {chatMessages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`max-w-xs px-4 py-2 rounded-lg ${
+                <div className={`max-w-xs px-3 py-2 ${
                   msg.type === 'user'
                     ? isDarkTheme 
-                      ? 'bg-white text-black' 
-                      : 'bg-black text-white'
+                      ? 'bg-gray-700 text-gray-200' 
+                      : 'bg-gray-300 text-gray-800'
                     : isDarkTheme 
-                      ? 'bg-white/10 text-white' 
-                      : 'bg-gray-100 text-gray-800'
+                      ? 'bg-gray-800 text-gray-300' 
+                      : 'bg-gray-200 text-gray-700'
                 }`}>
-                  <p className="text-sm">{msg.message}</p>
-                  <p className={`text-xs mt-1 ${
+                  <div className="flex items-center space-x-2 mb-1">
+                    <span className={`text-xs ${
+                      msg.type === 'user' 
+                        ? isDarkTheme ? 'text-blue-400' : 'text-blue-600'
+                        : isDarkTheme ? 'text-green-400' : 'text-green-600'
+                    }`}>
+                      {msg.type === 'user' ? 'user@terminal:~$' : 'ai@terminal:~$'}
+                    </span>
+                  </div>
+                  <p className="text-sm leading-relaxed">{msg.message}</p>
+                  <p className={`text-xs mt-2 ${
                     msg.type === 'user'
-                      ? isDarkTheme ? 'text-gray-600' : 'text-gray-300'
-                      : isDarkTheme ? 'text-gray-400' : 'text-gray-500'
-                  }`}>{msg.timestamp}</p>
+                      ? isDarkTheme ? 'text-gray-400' : 'text-gray-500'
+                      : isDarkTheme ? 'text-gray-500' : 'text-gray-600'
+                  }`}>[{msg.timestamp}]</p>
                 </div>
               </div>
             ))}
@@ -148,18 +223,23 @@ const ChatBot = ({ isDarkTheme }) => {
             {/* Typing Indicator */}
             {isChatTyping && (
               <div className="flex justify-start">
-                <div className={`max-w-xs px-4 py-2 rounded-lg ${
-                  isDarkTheme ? 'bg-white/10' : 'bg-gray-100'
+                <div className={`max-w-xs px-3 py-2 ${
+                  isDarkTheme ? 'bg-gray-800' : 'bg-gray-200'
                 }`}>
+                  <div className="flex items-center space-x-2 mb-1">
+                    <span className={`text-xs ${
+                      isDarkTheme ? 'text-green-400' : 'text-green-600'
+                    }`}>ai@terminal:~$</span>
+                  </div>
                   <div className="flex space-x-1">
                     <div className={`w-2 h-2 rounded-full animate-bounce ${
-                      isDarkTheme ? 'bg-white' : 'bg-gray-600'
+                      isDarkTheme ? 'bg-gray-400' : 'bg-gray-600'
                     }`} style={{ animationDelay: '0ms' }}></div>
                     <div className={`w-2 h-2 rounded-full animate-bounce ${
-                      isDarkTheme ? 'bg-white' : 'bg-gray-600'
+                      isDarkTheme ? 'bg-gray-400' : 'bg-gray-600'
                     }`} style={{ animationDelay: '150ms' }}></div>
                     <div className={`w-2 h-2 rounded-full animate-bounce ${
-                      isDarkTheme ? 'bg-white' : 'bg-gray-600'
+                      isDarkTheme ? 'bg-gray-400' : 'bg-gray-600'
                     }`} style={{ animationDelay: '300ms' }}></div>
                   </div>
                 </div>
@@ -168,36 +248,41 @@ const ChatBot = ({ isDarkTheme }) => {
           </div>
 
           {/* Chat Input */}
-          <div className={`p-4 border-t ${
-            isDarkTheme ? 'border-white/20' : 'border-gray-200'
-          }`}>
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type your message..."
-                className={`flex-1 px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 transition-all ${
-                  isDarkTheme 
-                    ? 'bg-white/10 border-white/20 text-white placeholder-gray-400 focus:ring-white/50' 
-                    : 'bg-gray-50 border-gray-200 text-gray-800 placeholder-gray-500 focus:ring-black/50'
-                }`}
-              />
+          <div className="p-4">
+            <div className="flex items-center space-x-2 min-w-0">
+              <span className={`text-sm font-mono ${
+                isDarkTheme ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                user@terminal:~$ 
+              </span>
+              <div className="flex-1 min-w-0">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Enter message..."
+                  className={`w-full px-2 py-1 bg-transparent border-none outline-none font-mono text-sm ${
+                    isDarkTheme 
+                      ? 'text-gray-200 placeholder-gray-500' 
+                      : 'text-gray-800 placeholder-gray-400'
+                  }`}
+                />
+              </div>
               <button
                 onClick={handleSendMessage}
                 disabled={!newMessage.trim()}
-                className={`px-4 py-2 rounded-lg transition-all ${
+                className={`w-8 h-8 rounded-full transition-all flex-shrink-0 flex items-center justify-center ${
                   newMessage.trim()
                     ? isDarkTheme 
-                      ? 'bg-white text-black hover:bg-gray-100' 
-                      : 'bg-black text-white hover:bg-gray-800'
+                      ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' 
+                      : 'bg-gray-600 text-white hover:bg-gray-500'
                     : isDarkTheme 
-                      ? 'bg-white/20 text-white/50 cursor-not-allowed' 
-                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+                      : 'bg-gray-300 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
               </button>
