@@ -313,7 +313,7 @@ const ChatBot = ({ isDarkTheme }) => {
               const welcomeMessage = {
                 id: Date.now() + Math.random(),
                 type: 'ai',
-                message: "Hey there! 👋 I'm Shuja Abrar. I'm a blockchain developer and web designer with a passion for creating innovative solutions. What would you like to know about my work or how can I help you today?",
+                message: "Hey there! 👋 I'm Shuja Abrar. How can I help you today?",
                 timestamp: new Date().toLocaleTimeString()
               }
               setChatMessages([welcomeMessage])
