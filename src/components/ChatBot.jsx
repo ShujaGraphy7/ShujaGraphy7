@@ -29,6 +29,10 @@ const ChatBot = ({ isDarkTheme }) => {
   // Random resize hint display
   const [showResizeHint, setShowResizeHint] = useState(false)
   
+  // Auto-open chat functionality
+  const [hasAutoOpened, setHasAutoOpened] = useState(false)
+  const [showHighlight, setShowHighlight] = useState(false)
+  
   useEffect(() => {
     const showHintRandomly = () => {
       // Show hint for 3 seconds every 15-30 seconds
@@ -42,6 +46,68 @@ const ChatBot = ({ isDarkTheme }) => {
     
     showHintRandomly()
   }, [])
+  
+  // Show highlight after 5 seconds
+  useEffect(() => {
+    const highlightTimer = setTimeout(() => {
+      console.log('Showing highlight now!')
+      setShowHighlight(true)
+    }, 5000) // 5 seconds
+    
+    return () => clearTimeout(highlightTimer)
+  }, [])
+  
+  // Hide highlight permanently if chat is manually opened
+  useEffect(() => {
+    if (isChatOpen && !hasAutoOpened) {
+      console.log('Chat manually opened - hiding highlight permanently')
+      setShowHighlight(false)
+    }
+  }, [isChatOpen, hasAutoOpened])
+  
+  // Auto-open chat after 30-45 seconds of scrolling
+  useEffect(() => {
+    if (hasAutoOpened) return
+    
+    let autoOpenTimer
+    
+    // Start the auto-open timer immediately when component mounts
+    const startAutoOpenTimer = () => {
+      if (!hasAutoOpened && !isChatOpen) {
+        // Random delay between 20-30 seconds
+        const randomDelay = Math.random() * 10000 + 20000 // 20-30 seconds
+        console.log(`Auto-open timer set for ${Math.round(randomDelay/1000)} seconds`)
+        
+        autoOpenTimer = setTimeout(() => {
+          // Check if chat is still closed before auto-opening
+          if (!isChatOpen && !hasAutoOpened) {
+            console.log('Auto-opening chat now!')
+            setIsChatOpen(true)
+            setHasAutoOpened(true)
+            setShowHighlight(false) // Hide highlight when chat opens
+            
+            // Add welcome message after a short delay
+            setTimeout(() => {
+              const welcomeMessage = {
+                id: Date.now(), // Use timestamp instead of chatMessages.length
+                type: 'ai',
+                message: "Hey there! 👋 I noticed you've been exploring my website. I'm Shuja, a blockchain developer and web designer. Feel free to ask me anything about my work, services, or just say hello! What would you like to know?",
+                timestamp: new Date().toLocaleTimeString()
+              }
+              setChatMessages(prev => [...prev, welcomeMessage])
+            }, 1000)
+          }
+        }, randomDelay)
+      }
+    }
+    
+    // Start timer immediately
+    startAutoOpenTimer()
+    
+    return () => {
+      clearTimeout(autoOpenTimer)
+    }
+  }, [hasAutoOpened, isChatOpen]) // Removed chatMessages.length dependency
 
   // Chat functions
   const handleSendMessage = () => {
@@ -211,7 +277,7 @@ const ChatBot = ({ isDarkTheme }) => {
       {!isChatOpen && (
         <motion.button
           onClick={() => setIsChatOpen(true)}
-          className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center ${
+          className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center relative ${
             isDarkTheme 
               ? 'bg-gray-800 text-white hover:bg-gray-700' 
               : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
@@ -223,6 +289,41 @@ const ChatBot = ({ isDarkTheme }) => {
           exit={{ scale: 0, opacity: 0, rotate: 90 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
+          {/* Highlight ring when auto-open is about to happen */}
+          {showHighlight && !isChatOpen && (
+            <motion.div
+              className={`absolute inset-0 rounded-full ${
+                isDarkTheme ? 'ring-2 ring-white' : 'ring-2 ring-black'
+              }`}
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.8, 0.3]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          )}
+          
+          {/* Pulsing dot indicator */}
+          {showHighlight && !isChatOpen && (
+            <motion.div
+              className={`absolute -top-1 -right-1 w-4 h-4 rounded-full ${
+                isDarkTheme ? 'bg-white' : 'bg-black'
+              }`}
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [1, 0.7, 1]
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          )}
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
