@@ -8,77 +8,434 @@ const ChatBot = ({ isDarkTheme }) => {
   // AI Hook
   const { generateResponse } = useShujaAI()
   
+  // Smart highlighting system - highlights specific text elements based on response content
+  const highlightSectionsFromContent = (content) => {
+    const lowerContent = content.toLowerCase()
+    
+    // Map of keywords to specific text elements with precise targeting
+    const preciseMappings = {
+      // Education - BSC Computer Science specific
+      'bsc computer science': { 
+        selector: '#education .education-item:first-child',
+        fallback: '#education',
+        type: 'specific',
+        priority: 3
+      },
+      'bs computer science': { 
+        selector: '#education .education-item:first-child',
+        fallback: '#education',
+        type: 'specific',
+        priority: 3
+      },
+      'computer science': { 
+        selector: '#education .education-item:first-child',
+        fallback: '#education',
+        type: 'specific',
+        priority: 3
+      },
+      
+      // Education - DAE ICT specific
+      'dae': { 
+        selector: '#education .education-item:nth-child(2)',
+        fallback: '#education',
+        type: 'specific',
+        priority: 3
+      },
+      'information technology': { 
+        selector: '#education .education-item:nth-child(2)',
+        fallback: '#education',
+        type: 'specific',
+        priority: 3
+      },
+      'ict': { 
+        selector: '#education .education-item:nth-child(2)',
+        fallback: '#education',
+        type: 'specific',
+        priority: 3
+      },
+      
+      // Experience - Hashnetics specific
+      'hashnetics': { 
+        selector: '#experience .experience-item:first-child',
+        fallback: '#experience',
+        type: 'specific',
+        priority: 2
+      },
+      'co-founder': { 
+        selector: '#experience .experience-item:first-child',
+        fallback: '#experience',
+        type: 'specific',
+        priority: 2
+      },
+      
+      // Experience - Systems Limited specific
+      'systems limited': { 
+        selector: '#experience .experience-item:nth-child(2)',
+        fallback: '#experience',
+        type: 'specific',
+        priority: 2
+      },
+      'junior consultant': { 
+        selector: '#experience .experience-item:nth-child(2)',
+        fallback: '#experience',
+        type: 'specific',
+        priority: 2
+      },
+      
+      // Experience - FusionwaveAI specific
+      'fusionwave': { 
+        selector: '#experience .experience-item:nth-child(3)',
+        fallback: '#experience',
+        type: 'specific',
+        priority: 2
+      },
+      'shardium': { 
+        selector: '#experience .experience-item:nth-child(3)',
+        fallback: '#experience',
+        type: 'specific',
+        priority: 2
+      },
+      'skale': { 
+        selector: '#experience .experience-item:nth-child(3)',
+        fallback: '#experience',
+        type: 'specific',
+        priority: 2
+      },
+      
+      // Experience - Kaizen Global specific
+      'kaizen global': { 
+        selector: '#experience .experience-item:nth-child(4)',
+        fallback: '#experience',
+        type: 'specific',
+        priority: 2
+      },
+      'smart contract deployment': { 
+        selector: '#experience .experience-item:nth-child(4)',
+        fallback: '#experience',
+        type: 'specific',
+        priority: 2
+      },
+      
+      // Experience - Freelance specific
+      'freelance': { 
+        selector: '#experience .experience-item:nth-child(5)',
+        fallback: '#experience',
+        type: 'specific',
+        priority: 2
+      },
+      'decentralized finance': { 
+        selector: '#experience .experience-item:nth-child(5)',
+        fallback: '#experience',
+        type: 'specific',
+        priority: 2
+      },
+      
+      // Skills - React specific
+      'react': { 
+        selector: '#tech-stack .skill-item[data-skill="react"]',
+        fallback: '#tech-stack',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Skills - Node.js specific
+      'node': { 
+        selector: '#tech-stack .skill-item[data-skill="node"]',
+        fallback: '#tech-stack',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Skills - Solidity specific
+      'solidity': { 
+        selector: '#tech-stack .skill-item[data-skill="solidity"]',
+        fallback: '#tech-stack',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Skills - Rust specific
+      'rust': { 
+        selector: '#tech-stack .skill-item[data-skill="rust"]',
+        fallback: '#tech-stack',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Skills - Blockchain specific
+      'blockchain': { 
+        selector: '#tech-stack .skill-item[data-skill="blockchain"]',
+        fallback: '#tech-stack',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Skills - DeFi specific
+      'defi': { 
+        selector: '#tech-stack .skill-item[data-skill="defi"]',
+        fallback: '#tech-stack',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Skills - NFT specific
+      'nft': { 
+        selector: '#tech-stack .skill-item[data-skill="nft"]',
+        fallback: '#tech-stack',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Skills - Shopify specific
+      'shopify': { 
+        selector: '#tech-stack .skill-item[data-skill="shopify"]',
+        fallback: '#tech-stack',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Skills - WordPress specific
+      'wordpress': { 
+        selector: '#tech-stack .skill-item[data-skill="wordpress"]',
+        fallback: '#tech-stack',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Skills - Tailwind specific
+      'tailwind': { 
+        selector: '#tech-stack .skill-item[data-skill="tailwind"]',
+        fallback: '#tech-stack',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Services - Fiverr specific
+      'fiverr': { 
+        selector: '#hire-me .fiverr-services',
+        fallback: '#hire-me',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Services - Upwork specific
+      'upwork': { 
+        selector: '#hire-me .upwork-services',
+        fallback: '#hire-me',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Payment - Crypto specific
+      'cryptocurrency': { 
+        selector: '#payment .crypto-payment',
+        fallback: '#payment',
+        type: 'specific',
+        priority: 1
+      },
+      'crypto': { 
+        selector: '#payment .crypto-payment',
+        fallback: '#payment',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Payment - Bank Transfer specific
+      'bank transfer': { 
+        selector: '#payment .bank-transfer',
+        fallback: '#payment',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // Contact - Social Media specific
+      'linkedin': { 
+        selector: '#connect .social-item[data-platform="linkedin"]',
+        fallback: '#connect',
+        type: 'specific',
+        priority: 1
+      },
+      'github': { 
+        selector: '#connect .social-item[data-platform="github"]',
+        fallback: '#connect',
+        type: 'specific',
+        priority: 1
+      },
+      
+      // About - Specific roles
+      'blockchain consultant': { 
+        selector: '#about-me .role-blockchain',
+        fallback: '#about-me',
+        type: 'specific',
+        priority: 1
+      },
+      'full stack developer': { 
+        selector: '#about-me .role-developer',
+        fallback: '#about-me',
+        type: 'specific',
+        priority: 1
+      },
+      'web3 innovator': { 
+        selector: '#about-me .role-innovator',
+        fallback: '#about-me',
+        type: 'specific',
+        priority: 1
+      }
+    }
+    
+    // Track which elements are currently highlighted
+    const highlightedElements = new Set()
+    
+    // Check each keyword and highlight matching elements
+    Object.entries(preciseMappings).forEach(([keyword, mapping]) => {
+      if (lowerContent.includes(keyword)) {
+        let targetElement = null
+        
+        // Try to find the specific element first
+        if (mapping.selector) {
+          targetElement = document.querySelector(mapping.selector)
+        }
+        
+        // Fallback to section if specific element not found
+        if (!targetElement && mapping.fallback) {
+          targetElement = document.getElementById(mapping.fallback.replace('#', ''))
+        }
+        
+        if (targetElement) {
+          // Create unique highlight ID for this element
+          const highlightId = `highlight-${Date.now()}-${Math.random()}`
+          highlightedElements.add(highlightId)
+          
+          // Add highlight effect (more prominent since it only happens once)
+          targetElement.style.transition = 'all 0.5s ease'
+          targetElement.style.boxShadow = '0 0 30px rgba(59, 130, 246, 0.7)'
+          targetElement.style.transform = 'scale(1.05)'
+          targetElement.style.backgroundColor = 'rgba(59, 130, 246, 0.15)'
+          
+          // Remove highlight after 5 seconds (longer duration since it's the only highlight)
+          setTimeout(() => {
+            if (targetElement) {
+              targetElement.style.boxShadow = ''
+              targetElement.style.transform = ''
+              targetElement.style.backgroundColor = ''
+            }
+            highlightedElements.delete(highlightId)
+          }, 5000)
+        }
+      }
+    })
+    
+    return highlightedElements
+  }
+
+  // Smart scrolling system - analyzes complete response and scrolls to best matching section
+  const smartScrollToBestSection = (content) => {
+    const lowerContent = content.toLowerCase()
+    
+    // Define section priorities and keywords
+    const sectionMappings = [
+      {
+        id: 'education',
+        keywords: ['education', 'degree', 'bsc', 'dae', 'university', 'graduation', 'study', 'academic'],
+        priority: 3
+      },
+      {
+        id: 'experience',
+        keywords: ['experience', 'work', 'job', 'career', 'hashnetics', 'systems limited', 'fusionwave', 'kaizen', 'freelance'],
+        priority: 2
+      },
+      {
+        id: 'tech-stack',
+        keywords: ['skills', 'react', 'node', 'solidity', 'rust', 'blockchain', 'defi', 'nft', 'shopify', 'wordpress', 'tailwind'],
+        priority: 1
+      },
+      {
+        id: 'about-me',
+        keywords: ['about', 'myself', 'background', 'consultant', 'developer', 'innovator'],
+        priority: 1
+      },
+      {
+        id: 'hire-me',
+        keywords: ['hire', 'services', 'fiverr', 'upwork', 'freelance', 'work with me'],
+        priority: 1
+      },
+      {
+        id: 'payment',
+        keywords: ['payment', 'crypto', 'bank transfer', 'money', 'cost', 'price'],
+        priority: 1
+      },
+      {
+        id: 'connect',
+        keywords: ['contact', 'linkedin', 'github', 'email', 'phone', 'social'],
+        priority: 1
+      }
+    ]
+    
+    // Find the best matching section based on content analysis
+    let bestSection = null
+    let bestScore = 0
+    
+    sectionMappings.forEach(section => {
+      let score = 0
+      
+      // Check keyword matches
+      section.keywords.forEach(keyword => {
+        if (lowerContent.includes(keyword)) {
+          score += section.priority
+        }
+      })
+      
+      // Bonus for multiple keyword matches
+      const keywordMatches = section.keywords.filter(keyword => lowerContent.includes(keyword)).length
+      if (keywordMatches > 1) {
+        score += keywordMatches * 0.5
+      }
+      
+      // Update best section if this one has higher score
+      if (score > bestScore) {
+        bestScore = score
+        bestSection = section.id
+      }
+    })
+    
+    // Only scroll if we found a good match (score > 0.5)
+    if (bestSection && bestScore > 0.5) {
+      // Smooth scroll to the best section
+      setTimeout(() => {
+        scrollToSection(bestSection)
+      }, 500) // Delay to let user read the response first
+    }
+  }
+
   // Scroll to section functionality
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId)
     if (element) {
+      // Smooth scroll to the section with better positioning
       element.scrollIntoView({ 
         behavior: 'smooth', 
-        block: 'start' 
+        block: 'start',
+        inline: 'nearest'
       })
       
       // Add temporary highlight effect
-      element.style.transition = 'all 0.3s ease'
-      element.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.5)'
-      element.style.transform = 'scale(1.02)'
+      element.style.transition = 'all 0.5s ease'
+      element.style.boxShadow = '0 0 30px rgba(59, 246, 130, 0.6)' // Green for scroll-to
+      element.style.transform = 'scale(1.03)'
+      element.style.backgroundColor = 'rgba(59, 246, 130, 0.1)'
       
-      // Remove highlight after 2 seconds
+      // Remove highlight after 4 seconds
       setTimeout(() => {
-        element.style.boxShadow = ''
-        element.style.transform = ''
-      }, 2000)
+        if (element) {
+          element.style.boxShadow = ''
+          element.style.transform = ''
+          element.style.backgroundColor = ''
+        }
+      }, 4000)
     }
   }
   
-  // Map chat keywords to website sections
-  const getSectionToScroll = (message) => {
-    const lowerMessage = message.toLowerCase()
-    
-    // About section
-    if (lowerMessage.includes('about') || lowerMessage.includes('who are you') || lowerMessage.includes('tell me about yourself')) {
-      return 'about-me'
-    }
-    
-    // Experience section
-    if (lowerMessage.includes('experience') || lowerMessage.includes('work') || lowerMessage.includes('career') || lowerMessage.includes('jobs')) {
-      return 'experience'
-    }
-    
-    // Skills/Technology section - EXPANDED to catch ALL skill questions
-    if (lowerMessage.includes('skills') || lowerMessage.includes('technologies') || lowerMessage.includes('what can you do') || lowerMessage.includes('expertise') || 
-        lowerMessage.includes('tech stack') || lowerMessage.includes('programming') || lowerMessage.includes('development') || lowerMessage.includes('coding') ||
-        lowerMessage.includes('react') || lowerMessage.includes('node') || lowerMessage.includes('javascript') || lowerMessage.includes('typescript') ||
-        lowerMessage.includes('html') || lowerMessage.includes('css') || lowerMessage.includes('tailwind') || lowerMessage.includes('figma') ||
-        lowerMessage.includes('docker') || lowerMessage.includes('git') || lowerMessage.includes('linux') || lowerMessage.includes('shopify') ||
-        lowerMessage.includes('wordpress') || lowerMessage.includes('woocommerce') || lowerMessage.includes('solidity') || lowerMessage.includes('rust') ||
-        lowerMessage.includes('blockchain') || lowerMessage.includes('defi') || lowerMessage.includes('nft') || lowerMessage.includes('smart contract') ||
-        lowerMessage.includes('mern') || lowerMessage.includes('mongodb') || lowerMessage.includes('express') || lowerMessage.includes('e-commerce') ||
-        lowerMessage.includes('design') || lowerMessage.includes('ui') || lowerMessage.includes('ux') || lowerMessage.includes('graphics')) {
-      return 'tech-stack'
-    }
-    
-    // Services/Hire section
-    if (lowerMessage.includes('services') || lowerMessage.includes('what do you offer') || lowerMessage.includes('offerings') || lowerMessage.includes('hire') || lowerMessage.includes('work with you')) {
-      return 'hire-me'
-    }
-    
-    // Education section
-    if (lowerMessage.includes('education') || lowerMessage.includes('degree') || lowerMessage.includes('university') || lowerMessage.includes('study')) {
-      return 'education'
-    }
-    
-    // Payment section
-    if (lowerMessage.includes('payment') || lowerMessage.includes('pricing') || lowerMessage.includes('cost') || lowerMessage.includes('rates')) {
-      return 'payment'
-    }
-    
-    // Contact/Connect section
-    if (lowerMessage.includes('contact') || lowerMessage.includes('get in touch') || lowerMessage.includes('email') || lowerMessage.includes('phone') || lowerMessage.includes('connect')) {
-      return 'connect'
-    }
-    
-    return null
-  }
+    // that analyzes the complete AI response for better accuracy
   
   // Chat bot states
   const [isChatOpen, setIsChatOpen] = useState(false)
@@ -206,13 +563,8 @@ const ChatBot = ({ isDarkTheme }) => {
     setNewMessage('')
     
     // Check if we should scroll to a section
-    const sectionToScroll = getSectionToScroll(newMessage)
-    if (sectionToScroll) {
-      // Small delay to let the message appear first
-      setTimeout(() => {
-        scrollToSection(sectionToScroll)
-      }, 500)
-    }
+    // Note: Smart scrolling is now handled after AI response completion
+    // This provides better context analysis and smoother user experience
     
     // Show typing indicator
     setIsChatTyping(true)
@@ -239,6 +591,8 @@ const ChatBot = ({ isDarkTheme }) => {
           currentText += fullText[currentText.length]
           setTypingText(currentText)
           
+          // Note: Highlighting removed during typing to prevent flickering
+          
           // Add random delays for realistic typing (reduced range)
           const randomDelay = typingSpeed + Math.random() * 25
           const timer = setTimeout(typeWriter, randomDelay)
@@ -249,6 +603,12 @@ const ChatBot = ({ isDarkTheme }) => {
             setChatMessages(prev => [...prev, uniqueAiResponse])
             setIsChatTyping(false)
             setTypingText('')
+            
+            // Highlight and scroll to best section only ONCE after completion
+            setTimeout(() => {
+              highlightSectionsFromContent(fullText)
+              smartScrollToBestSection(fullText)
+            }, 300) // Small delay to let user see the complete message first
           }, 200) // 0.2 second delay before showing complete message (faster)
           typingTimersRef.current.push(completionTimer)
         }
@@ -323,6 +683,16 @@ const ChatBot = ({ isDarkTheme }) => {
     // Clean up all typing effect timers
     typingTimersRef.current.forEach(timer => clearTimeout(timer))
     typingTimersRef.current = []
+    
+    // Remove all section highlights
+    const allSections = ['about-me', 'tech-stack', 'experience', 'education', 'hire-me', 'payment', 'connect']
+    allSections.forEach(sectionId => {
+      const element = document.getElementById(sectionId)
+      if (element) {
+        element.style.boxShadow = ''
+        element.style.transform = ''
+      }
+    })
     
     // Keep hasAutoOpened true - auto-open should never happen again once it has occurred
     // Don't re-enable highlight - it should stay hidden permanently once chat has been opened
