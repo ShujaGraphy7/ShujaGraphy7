@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion'
 
@@ -157,7 +157,7 @@ const ChatBot = ({ isDarkTheme }) => {
   // Handle resize functionality
   const [resizeMode, setResizeMode] = useState(null)
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = useCallback((e) => {
     if (!isResizing || !resizeMode) return
     
     const rect = chatBoxRef.current?.getBoundingClientRect()
@@ -185,7 +185,7 @@ const ChatBot = ({ isDarkTheme }) => {
     }
     
     setChatSize({ width: newWidth, height: newHeight })
-  }
+  }, [isResizing, resizeMode, chatSize.width, chatSize.height])
 
   const handleMouseUp = () => {
     setIsResizing(false)
