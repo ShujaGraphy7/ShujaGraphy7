@@ -1,0 +1,11 @@
+# GoDaddy FTP Configuration
+# Copy this file to .env and fill in your actual credentials
+
+GODADDY_FTP_HOST=your-domain.com
+GODADDY_FTP_USER=your-username
+GODADDY_FTP_PASSWORD=your-password
+GODADDY_FTP_PORT=21
+GODADDY_REMOTE_DIR=/public_html
+
+# Optional: Set to true if your hosting supports FTPS
+# GODADDY_FTP_SECURE=true
