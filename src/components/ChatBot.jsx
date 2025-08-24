@@ -546,7 +546,7 @@ const ChatBot = ({ isDarkTheme }) => {
     return () => {
       clearTimeout(autoOpenTimer)
     }
-  }, [hasAutoOpened]) // Only depend on hasAutoOpened - don't restart timer when chat closes
+  }, [hasAutoOpened, isChatOpen]) // Include isChatOpen since it's used inside the effect
 
   // Chat functions
   const handleSendMessage = async () => {
