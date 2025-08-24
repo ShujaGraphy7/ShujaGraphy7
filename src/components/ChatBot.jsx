@@ -739,6 +739,19 @@ const ChatBot = ({ isDarkTheme }) => {
 
   // Handle resize functionality
   const [resizeMode, setResizeMode] = useState(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   const handleMouseMove = useCallback((e) => {
     if (!isResizing || !resizeMode) return
@@ -789,7 +802,21 @@ const ChatBot = ({ isDarkTheme }) => {
   }, [isResizing, handleMouseMove])
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <>
+      {/* Mobile Background Overlay */}
+      {isMobile && isChatOpen && (
+        <motion.div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        />
+      )}
+      
+      <div className={`fixed z-50 ${
+        isMobile ? 'bottom-4 right-4' : 'bottom-6 right-6'
+      }`}>
       {/* Chat Bubble */}
       {!isChatOpen && (
         <motion.button
@@ -808,7 +835,9 @@ const ChatBot = ({ isDarkTheme }) => {
               setChatMessages([welcomeMessage])
             }, 500)
           }}
-          className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center relative ${
+          className={`rounded-full shadow-lg flex items-center justify-center relative ${
+            isMobile ? 'w-14 h-14' : 'w-16 h-16'
+          } ${
             isDarkTheme 
               ? 'bg-gray-800 text-white hover:bg-gray-700' 
               : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
@@ -864,7 +893,9 @@ const ChatBot = ({ isDarkTheme }) => {
       {/* Minimized State Indicator */}
       {isMinimized && (
         <motion.div
-          className={`w-32 h-8 shadow-lg flex items-center justify-center font-mono cursor-pointer ${
+          className={`shadow-lg flex items-center justify-center font-mono cursor-pointer ${
+            isMobile ? 'w-24 h-7' : 'w-32 h-8'
+          } ${
             isDarkTheme 
               ? 'bg-gray-900 text-gray-300' 
               : 'bg-gray-100 text-gray-700'
@@ -897,10 +928,16 @@ const ChatBot = ({ isDarkTheme }) => {
             isDarkTheme 
               ? 'bg-gray-950 border-gray-700' 
               : 'bg-white border-gray-200'
+          } ${
+            isMobile 
+              ? `w-[90vw] h-[90vh] max-w-none max-h-none border-2 ${
+                  isDarkTheme ? 'border-gray-600' : 'border-gray-300'
+                }` 
+              : ''
           }`}
           style={{
-            width: `${chatSize.width}px`,
-            height: `${chatSize.height}px`
+            width: isMobile ? '90vw' : `${chatSize.width}px`,
+            height: isMobile ? '90vh' : `${chatSize.height}px`
           }}
           initial={{ opacity: 0, scale: 0.9, y: 50 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -961,33 +998,35 @@ const ChatBot = ({ isDarkTheme }) => {
                     <path d="M20 14H4v-2h16v2z"/>
                   </svg>
                 </motion.button>
-                <motion.button
-                  onClick={handleMaximize}
-                  className={`w-3 h-3 rounded-full cursor-pointer relative flex items-center justify-center ${
-                    isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'
-                  }`}
-                  whileHover={{ 
-                    scale: 1.2, 
-                    backgroundColor: isDarkTheme ? '#4B5563' : '#9CA3AF'
-                  }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  title={
-                    chatSize.width === 480 && chatSize.height === 600 ? "Minimize to small" : "Expand to large"
-                  }
-                >
-                  <svg className={`w-2.5 h-2.5 ${
-                    isDarkTheme ? 'text-gray-200' : 'text-gray-800'
-                  }`} fill="currentColor" viewBox="0 0 24 24" strokeWidth="4">
-                    {chatSize.width === 480 && chatSize.height === 600 ? (
-                      // Currently expanded - show shrink icon (like Mac minimize)
-                      <path d="M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3"/>
-                    ) : (
-                      // Currently maximized - show expand icon (like Mac maximize)
-                      <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-                    )}
-                  </svg>
-                </motion.button>
+                {!isMobile && (
+                  <motion.button
+                    onClick={handleMaximize}
+                    className={`w-3 h-3 rounded-full cursor-pointer relative flex items-center justify-center ${
+                      isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'
+                    }`}
+                    whileHover={{ 
+                      scale: 1.2, 
+                      backgroundColor: isDarkTheme ? '#4B5563' : '#9CA3AF'
+                    }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    title={
+                      chatSize.width === 480 && chatSize.height === 600 ? "Minimize to small" : "Expand to large"
+                    }
+                  >
+                    <svg className={`w-2.5 h-2.5 ${
+                      isDarkTheme ? 'text-gray-200' : 'text-gray-800'
+                    }`} fill="currentColor" viewBox="0 0 24 24" strokeWidth="4">
+                      {chatSize.width === 480 && chatSize.height === 600 ? (
+                        // Currently expanded - show shrink icon (like Mac minimize)
+                        <path d="M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3"/>
+                      ) : (
+                        // Currently maximized - show expand icon (like Mac maximize)
+                        <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                      )}
+                    </svg>
+                  </motion.button>
+                )}
               </div>
               <span className={`text-xs ml-3 ${
                 isDarkTheme ? 'text-gray-300' : 'text-gray-700'
@@ -1039,13 +1078,17 @@ const ChatBot = ({ isDarkTheme }) => {
           )}
 
           {/* Chat Messages */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-3 font-mono text-sm">
+          <div className={`flex-1 overflow-y-auto space-y-3 font-mono text-sm ${
+            isMobile ? 'p-3' : 'p-4'
+          }`}>
             {chatMessages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`max-w-[80%] px-3 py-2 ${
+                <div className={`px-3 py-2 ${
+                  isMobile ? 'max-w-full' : 'max-w-[80%]'
+                } ${
                   msg.type === 'user'
                     ? isDarkTheme 
                       ? 'bg-gray-700 text-gray-200' 
@@ -1076,7 +1119,9 @@ const ChatBot = ({ isDarkTheme }) => {
             {/* Typing Indicator */}
             {isChatTyping && (
               <div className="flex justify-start">
-                <div className={`max-w-[80%] px-3 py-2 ${
+                <div className={`px-3 py-2 ${
+                  isMobile ? 'max-w-full' : 'max-w-[80%]'
+                } ${
                   isDarkTheme ? 'bg-gray-800' : 'bg-gray-200'
                 }`}>
                   <div className="flex items-center space-x-2 mb-1">
@@ -1114,7 +1159,7 @@ const ChatBot = ({ isDarkTheme }) => {
               }`}>
                 user@terminal:~$ 
               </span>
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 w-full">
                 <input
                   type="text"
                   value={newMessage}
@@ -1145,8 +1190,8 @@ const ChatBot = ({ isDarkTheme }) => {
             </div>
           </div>
 
-          {/* Resize Handles - Always show since default is expanded size */}
-          {(
+          {/* Resize Handles - Only show on desktop */}
+          {!isMobile && (
             <>
               {/* Top resize handle */}
               <motion.div
@@ -1172,8 +1217,8 @@ const ChatBot = ({ isDarkTheme }) => {
 
 
 
-          {/* Resize hint - Show randomly with highlight effect */}
-          {showResizeHint && (
+          {/* Resize hint - Only show on desktop */}
+          {showResizeHint && !isMobile && (
             <motion.div
               initial={{ opacity: 0, y: -10, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -1188,7 +1233,8 @@ const ChatBot = ({ isDarkTheme }) => {
           )}
         </motion.div>
       )}
-    </div>
+      </div>
+    </>
   )
 }
 
