@@ -12,7 +12,7 @@
 
 ---
 
-## 🧑‍💻 About Me  
+## 🧑‍💻 About Me
 
 🌟 **Blockchain Consultant | Full-Stack Developer | Web3 Innovator**  
 
