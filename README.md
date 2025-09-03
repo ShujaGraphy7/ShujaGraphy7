@@ -14,7 +14,7 @@
 
 ## 🧑‍💻 About Me
 
-🌟 **Blockchain Consultant | Full-Stack Developer | Web3 Innovator**  
+🌟 **Blockchain & AI Consultant | Full-Stack Developer | Web3 Innovator**  
 
 - 💼 **3+ years of experience** delivering blockchain solutions across **Ethereum, Solana, and Private Blockchains**.  
 - 🔗 Specialized in **Smart Contracts, DeFi, NFTs, and Full-Stack Blockchain Applications**.  
