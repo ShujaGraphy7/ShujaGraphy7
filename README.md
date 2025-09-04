@@ -6,7 +6,7 @@
 <!-- Typing Intro -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=26&pause=1000&color=F70000&center=true&vCenter=true&width=900&height=100&lines=Blockchain+Consultant;Blockchain+%7C+Solana%2C+Ethereum%2C+Private+Blockchains;Full+Stack+Developer;Solidity+%7C+Rust+%7C+Anchor;DeFi+%7C+NFT+%7C+Web3+Specialist&multiline=true&lineHeight=42"/>
+    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=26&pause=1000&color=F70000&center=true&vCenter=true&width=900&height=100&lines=Blockchain+Consultant;AI;Blockchain+%7C+Solana%2C+Ethereum%2C+Private+Blockchains;Full+Stack+Developer;Solidity+%7C+Rust+%7C+Anchor;DeFi+%7C+NFT+%7C+Web3+Specialist&multiline=true&lineHeight=42"/>
   </a>
 </p>
 
