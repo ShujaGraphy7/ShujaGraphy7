@@ -16,6 +16,7 @@ import {
   FaUserTie,
 } from 'react-icons/fa'
 import { SiSolidity, SiRust, SiReact, SiJavascript, SiTypescript, SiNodedotjs, SiTailwindcss, SiBootstrap, SiHtml5, SiCss3, SiDocker, SiLinux, SiGit, SiFigma } from 'react-icons/si'
+import ScrollGrowingChain from './components/ScrollGrowingChain'
 
 function App() {
   const [currentText, setCurrentText] = useState('')
@@ -29,6 +30,8 @@ function App() {
   const [currentSection, setCurrentSection] = useState('ABOUT_ME')
   const [headerVisible, setHeaderVisible] = useState(false)
   const [hiddenSectionTitle, setHiddenSectionTitle] = useState(null)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const [scrollY, setScrollY] = useState(0)
   
   const typingTexts = useMemo(() => [
     "Blockchain Consultant",
@@ -115,7 +118,7 @@ function App() {
     }
   }, [contactIndex, contactInfo])
 
-  // Scroll glitch effect and section detection
+  // Scroll glitch effect, section detection, and 3D scroll progress
   useEffect(() => {
     const handleScroll = () => {
       // Trigger glitch effect randomly during scroll
@@ -123,6 +126,11 @@ function App() {
         setScrollGlitch(true)
         setTimeout(() => setScrollGlitch(false), 150)
       }
+
+      // Scroll metrics for 3D chain and parallax
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+      setScrollY(window.scrollY)
+      setScrollProgress(maxScroll > 0 ? window.scrollY / maxScroll : 0)
 
       // Show header when section titles hit the top of screen
       const currentScrollY = window.scrollY
@@ -188,6 +196,10 @@ function App() {
       isDarkTheme ? 'bg-black text-white' : 'bg-gray-50 text-gray-800'
     } ${scrollGlitch ? 'animate-pulse' : ''}`}
     style={{ fontFamily: 'var(--font-jetbrains), monospace' }}>
+      {/* Scroll-growing blockchain chain - always visible, builds as you scroll */}
+      <ScrollGrowingChain isDarkTheme={isDarkTheme} scrollY={scrollY} />
+      {/* Main Content - offset for chain */}
+      <div className="relative z-10 sm:pl-28 md:pl-36">
       {/* Terminal Header */}
       <motion.div 
         className={`relative py-8 border-b transition-colors duration-300 ${
@@ -347,7 +359,7 @@ function App() {
             </motion.h1>
           </motion.div>
           
-          <div className="h-24 flex items-center justify-center">
+          <div className="h-24 flex flex-col items-center justify-center gap-2">
             <span className={`text-xl md:text-2xl font-mono ${
               isDarkTheme ? 'text-white' : 'text-gray-800'
             }`}>
@@ -357,13 +369,23 @@ function App() {
                 ▋
               </span>
             </span>
+            <motion.p
+              className={`text-xs font-mono animate-bounce ${
+                isDarkTheme ? 'text-white/60' : 'text-gray-600'
+              }`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2 }}
+            >
+              ▼ scroll to build the chain
+            </motion.p>
           </div>
         </div>
       </motion.div>
 
                 {/* Sticky Header Container */}
       <motion.div 
-        className={`fixed top-0 left-0 right-0 z-50 ${
+        className={`fixed top-0 left-0 sm:left-28 md:left-36 right-0 z-50 ${
           isDarkTheme 
             ? 'bg-black border-b border-white/20' 
             : 'bg-gray-50 border-b border-gray-800/20'
@@ -398,10 +420,11 @@ function App() {
       {/* About Me */}
           <motion.section 
             id="about-me"
-            className="py-16 px-4 max-w-4xl mx-auto mt-20"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            className="section-3d py-16 px-4 max-w-4xl mx-auto mt-20"
+            style={{ perspective: 1200 }}
+            initial={{ opacity: 0, y: 50, rotateX: -15 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            viewport={{ once: false, amount: 0.15 }}
             transition={{ 
               duration: 2.5, 
               ease: [0.25, 0.46, 0.45, 0.94],
@@ -415,14 +438,14 @@ function App() {
             }}
           >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
+          className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          initial={{ opacity: 0, x: -30, rotateY: -15 }}
+          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
           whileHover={{
             x: [0, -2, 2, 0],
             transition: { duration: 0.6, ease: "easeInOut" }
@@ -531,9 +554,10 @@ function App() {
       {/* Tech Stack */}
       <motion.section 
         id="tech-stack"
-        className="py-16 px-4 max-w-4xl mx-auto"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        className="section-3d py-16 px-4 max-w-4xl mx-auto"
+        style={{ perspective: 1200 }}
+        initial={{ opacity: 0, y: 50, rotateX: -12 }}
+        whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
         viewport={{ once: false, amount: 0.2 }}
         transition={{ 
           duration: 2.8, 
@@ -548,14 +572,14 @@ function App() {
         }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
+          className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          initial={{ opacity: 0, x: -30, rotateY: -15 }}
+          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
           whileHover={{
             x: [0, -2, 2, 0],
@@ -716,14 +740,14 @@ function App() {
         }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
+          className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          initial={{ opacity: 0, x: -30, rotateY: -15 }}
+          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
           whileHover={{
             x: [0, -2, 2, 0],
@@ -808,7 +832,7 @@ function App() {
         viewport={{ once: true }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
+          className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
@@ -901,14 +925,14 @@ function App() {
         }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
+          className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          initial={{ opacity: 0, x: -30, rotateY: -15 }}
+          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
           whileHover={{
             x: [0, -2, 2, 0],
@@ -1013,14 +1037,14 @@ function App() {
         }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
+          className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          initial={{ opacity: 0, x: -30, rotateY: -15 }}
+          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
           whileHover={{
             x: [0, -2, 2, 0],
@@ -1223,14 +1247,14 @@ function App() {
         }}
       >
         <motion.h2 
-          className={`text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
+          className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          initial={{ opacity: 0, x: -30, rotateY: -15 }}
+          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
           whileHover={{
             x: [0, -2, 2, 0],
@@ -1333,6 +1357,7 @@ function App() {
           </span>
         </p>
       </motion.footer>
+      </div>
     </div>
   )
 }

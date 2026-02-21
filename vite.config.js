@@ -14,7 +14,8 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          ui: ['framer-motion', 'react-icons']
+          ui: ['framer-motion', 'react-icons'],
+          three: ['three', '@react-three/fiber', '@react-three/drei']
         }
       }
     }

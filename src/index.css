@@ -61,6 +61,17 @@
       0.025em 0.04em 0 #6b7280;
     animation: glitch-light 725ms infinite;
   }
+  
+  .section-3d {
+    transform-style: preserve-3d;
+    perspective: 1200px;
+  }
+  
+  .heading-3d {
+    transform-style: preserve-3d;
+    transform: perspective(800px);
+    backface-visibility: visible;
+  }
 }
 
 @keyframes glitch {
