@@ -17,6 +17,7 @@ import {
 } from 'react-icons/fa'
 import { SiSolidity, SiRust, SiReact, SiJavascript, SiTypescript, SiNodedotjs, SiTailwindcss, SiBootstrap, SiHtml5, SiCss3, SiDocker, SiLinux, SiGit, SiFigma } from 'react-icons/si'
 import ScrollGrowingChain from './components/ScrollGrowingChain'
+import { BlockRevealHeading, BlockContentWrapper } from './components/BlockRevealSection'
 
 function App() {
   const [currentText, setCurrentText] = useState('')
@@ -177,26 +178,12 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const fadeInUp = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
-  }
-
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  }
-
   return (
     <div className={`min-h-screen overflow-x-hidden transition-colors duration-300 ${
       isDarkTheme ? 'bg-black text-white' : 'bg-gray-50 text-gray-800'
     } ${scrollGlitch ? 'animate-pulse' : ''}`}
     style={{ fontFamily: 'var(--font-jetbrains), monospace' }}>
-      {/* Scroll-growing blockchain chain - always visible, builds as you scroll */}
+      {/* Blockchain chain - grows with scroll */}
       <ScrollGrowingChain isDarkTheme={isDarkTheme} scrollY={scrollY} />
       {/* Main Content - offset for chain */}
       <div className="relative z-10 sm:pl-28 md:pl-36">
@@ -417,68 +404,51 @@ function App() {
         </div>
       </motion.div>
 
-      {/* About Me */}
+      {/* About Me - Content unboxes from block */}
           <motion.section 
             id="about-me"
-            className="section-3d py-16 px-4 max-w-4xl mx-auto mt-20"
+            className="section-3d py-16 px-4 max-w-4xl mx-auto mt-20 overflow-hidden"
             style={{ perspective: 1200 }}
-            initial={{ opacity: 0, y: 50, rotateX: -15 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-            viewport={{ once: false, amount: 0.15 }}
-            transition={{ 
-              duration: 2.5, 
-              ease: [0.25, 0.46, 0.45, 0.94],
-              times: [0, 0.2, 0.4, 0.7, 0.9, 1],
-              y: { duration: 1.2, repeat: 0, ease: "easeInOut" },
-              opacity: { duration: 1.8, repeat: 0, ease: "easeInOut" }
-            }}
-            animate={{
-              y: [0, -3, 3, -1, 1, 0],
-              opacity: [1, 0.7, 1, 0.8, 1]
-            }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: false, amount: 0.05 }}
           >
+        <BlockRevealHeading isDarkTheme={isDarkTheme}>
         <motion.h2 
           className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -30, rotateY: -15 }}
-          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-          viewport={{ once: false, amount: 0.15 }}
-          whileHover={{
-            x: [0, -2, 2, 0],
-            transition: { duration: 0.6, ease: "easeInOut" }
-          }}
+          whileHover={{ x: [0, -2, 2, 0] }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
           animate={{
             opacity: hiddenSectionTitle === 'ABOUT_ME' ? 0 : 1,
             y: hiddenSectionTitle === 'ABOUT_ME' ? -20 : 0
           }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
         >
           <FaUserTie className="inline mr-3" />
           [ ABOUT_ME ]
         </motion.h2>
+        </BlockRevealHeading>
         
+        <BlockContentWrapper isDarkTheme={isDarkTheme}>
         <motion.div 
           className="text-left mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 1.8, ease: "easeOut" }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.15 }}
+          variants={{
+            visible: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
+          }}
         >
           <motion.p 
             className={`text-xl mb-4 text-justify ${
               isDarkTheme ? 'text-white' : 'text-gray-800'
             }`}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 1.0, ease: "easeOut" }}
-            whileHover={{
-              scale: [1, 1.02, 1],
-              transition: { duration: 0.8, ease: "easeInOut" }
-            }}
+            variants={{ hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } }}
+            whileHover={{ scale: [1, 1.02, 1] }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
           >
             🌟 <strong>Blockchain Consultant | Full-Stack Developer | Web3 Innovator</strong>
           </motion.p>
@@ -489,113 +459,71 @@ function App() {
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 2.0, ease: "easeOut" }}
           >
-            <motion.p 
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              whileHover={{
-                x: [0, -1, 1, 0],
-                transition: { duration: 0.5, ease: "easeInOut" }
-              }}
+<motion.p 
+            variants={{ hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } }}
+              whileHover={{ x: [0, -1, 1, 0] }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
             >💼 <strong>3+ years of experience</strong> delivering blockchain solutions across <strong>Ethereum, Solana, and Private Blockchains</strong>.</motion.p>
             <motion.p 
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-              whileHover={{
-                x: [0, -1, 1, 0],
-                transition: { duration: 0.5, ease: "easeInOut" }
-              }}
+              variants={{ hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } }}
+              whileHover={{ x: [0, -1, 1, 0] }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
             >🔗 Specialized in <strong>Smart Contracts, DeFi, NFTs, and Full-Stack Blockchain Applications</strong>.</motion.p>
             <motion.p 
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-              whileHover={{
-                x: [0, -1, 1, 0],
-                transition: { duration: 0.5, ease: "easeInOut" }
-              }}
+              variants={{ hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } }}
+              whileHover={{ x: [0, -1, 1, 0] }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
             >📖 <strong>Published Research Author</strong> (<em>Springer 2023 – Securing Supply Chains with Blockchain</em>).</motion.p>
             <motion.p 
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-              whileHover={{
-                x: [0, -1, 1, 0],
-                transition: { duration: 0.5, ease: "easeInOut" }
-              }}
+              variants={{ hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } }}
+              whileHover={{ x: [0, -1, 1, 0] }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
             >🚀 <strong>Co-Founder of Hashnetics</strong> → Building next-gen solutions in <strong>Blockchain, Web, E-Commerce, and Design</strong>.</motion.p>
             <motion.p 
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
-              whileHover={{
-                x: [0, -1, 1, 0],
-                transition: { duration: 0.5, ease: "easeInOut" }
-              }}
+              variants={{ hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } }}
+              whileHover={{ x: [0, -1, 1, 0] }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
             >🎯 Passionate about <strong>scalable, secure, and futuristic blockchain ecosystems</strong>.</motion.p>
             <motion.p 
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
-              whileHover={{
-                x: [0, -1, 1, 0],
-                transition: { duration: 0.5, ease: "easeInOut" }
-              }}
+              variants={{ hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } }}
+              whileHover={{ x: [0, -1, 1, 0] }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
             >⚡ Strong believer in <strong>continuous learning, innovation, and decentralization</strong>.</motion.p>
           </motion.div>
         </motion.div>
+        </BlockContentWrapper>
       </motion.section>
 
-      {/* Tech Stack */}
+      {/* Tech Stack - Content from block */}
       <motion.section 
         id="tech-stack"
-        className="section-3d py-16 px-4 max-w-4xl mx-auto"
-        style={{ perspective: 1200 }}
-        initial={{ opacity: 0, y: 50, rotateX: -12 }}
-        whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-        viewport={{ once: false, amount: 0.2 }}
-        transition={{ 
-          duration: 2.8, 
-          ease: [0.6, -0.28, 0.735, 0.045],
-          times: [0, 0.2, 0.5, 0.7, 0.9, 1],
-          y: { duration: 1.8, repeat: 0, ease: "easeInOut" },
-          opacity: { duration: 2.2, repeat: 0, ease: "easeInOut" }
-        }}
-        animate={{
-          y: [0, -4, 4, -2, 2, 0],
-          opacity: [1, 0.6, 1, 0.7, 1]
-        }}
+        className="section-3d py-16 px-4 max-w-4xl mx-auto overflow-hidden"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, amount: 0.05 }}
       >
+        <BlockRevealHeading isDarkTheme={isDarkTheme}>
         <motion.h2 
           className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -30, rotateY: -15 }}
-          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-          viewport={{ once: false, amount: 0.15 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          whileHover={{
-            x: [0, -2, 2, 0],
-            transition: { duration: 0.6, ease: "easeInOut" }
-          }}
+          whileHover={{ x: [0, -2, 2, 0] }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           <FaCode className="inline mr-3" />
           [ TECH_ARSENAL ]
         </motion.h2>
+        </BlockRevealHeading>
         
+        <BlockContentWrapper isDarkTheme={isDarkTheme}>
         <motion.div 
           className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-6 justify-items-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 1.8, ease: "easeOut" }}
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="flex flex-col items-center space-y-2 group">
             <SiSolidity className={`text-4xl group-hover:scale-110 transition-transform duration-200 ${
@@ -718,47 +646,40 @@ function App() {
             }`}>Figma</span>
           </div>
         </motion.div>
+        </BlockContentWrapper>
       </motion.section>
 
       {/* Experience Timeline */}
       <motion.section 
         id="experience"
-        className="py-16 px-4 max-w-4xl mx-auto"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.2 }}
-        transition={{ 
-          duration: 3.0, 
-          ease: [0.25, 0.46, 0.45, 0.94],
-          times: [0, 0.15, 0.4, 0.6, 0.8, 1],
-          y: { duration: 2.0, repeat: 0, ease: "easeInOut" },
-          opacity: { duration: 2.5, repeat: 0, ease: "easeInOut" }
-        }}
-        animate={{
-          y: [0, -5, 5, -3, 3, 0],
-          opacity: [1, 0.5, 1, 0.6, 1]
-        }}
+        className="py-16 px-4 max-w-4xl mx-auto overflow-hidden"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, amount: 0.05 }}
       >
+        <BlockRevealHeading isDarkTheme={isDarkTheme}>
         <motion.h2 
           className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -30, rotateY: -15 }}
-          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-          viewport={{ once: false, amount: 0.15 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          whileHover={{
-            x: [0, -2, 2, 0],
-            transition: { duration: 0.6, ease: "easeInOut" }
-          }}
+          whileHover={{ x: [0, -2, 2, 0] }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           <FaBriefcase className="inline mr-3" />
           [ EXPERIENCE_TIMELINE ]
         </motion.h2>
+        </BlockRevealHeading>
         
-        <div className="space-y-8">
+        <BlockContentWrapper isDarkTheme={isDarkTheme}>
+        <motion.div 
+          className="space-y-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.1 }}
+          variants={{ visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } } }}
+        >
           {[
             {
               period: "Mar 2025 – Present",
@@ -798,7 +719,7 @@ function App() {
                   ? 'border-white bg-gradient-to-r from-white/5 to-transparent' 
                   : 'border-gray-800 bg-gradient-to-r from-gray-800/5 to-transparent'
               }`}
-              variants={fadeInUp}
+              variants={{ hidden: { opacity: 0, x: -50 }, visible: { opacity: 1, x: 0 } }}
             >
               <div className={`absolute -left-2 w-4 h-4 rounded-full shadow-lg transition-colors duration-300 ${
                 isDarkTheme 
@@ -819,36 +740,40 @@ function App() {
               }`}>{job.details}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
+        </BlockContentWrapper>
       </motion.section>
 
       {/* Education & Certifications */}
       <motion.section 
         id="education"
-        className="py-16 px-4 max-w-4xl mx-auto"
-        variants={staggerContainer}
-        initial="initial"
-        whileInView="animate"
-        viewport={{ once: true }}
+        className="py-16 px-4 max-w-4xl mx-auto overflow-hidden"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, amount: 0.05 }}
       >
+        <BlockRevealHeading isDarkTheme={isDarkTheme}>
         <motion.h2 
           className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          variants={fadeInUp}
+          whileHover={{ x: [0, -2, 2, 0] }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           <FaGraduationCap className="inline mr-3" />
           [ EDUCATION_CERTS ]
         </motion.h2>
+        </BlockRevealHeading>
         
+        <BlockContentWrapper isDarkTheme={isDarkTheme}>
         <motion.div 
           className="space-y-6"
-          variants={staggerContainer}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.1 }}
+          variants={{ visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } } }}
         >
           {[
             {
@@ -883,7 +808,7 @@ function App() {
                   ? 'border-white bg-gradient-to-r from-white/5 to-transparent' 
                   : 'border-gray-800 bg-gradient-to-r from-gray-800/5 to-transparent'
               }`}
-              variants={fadeInUp}
+              variants={{ hidden: { opacity: 0, x: -50 }, visible: { opacity: 1, x: 0 } }}
             >
               <div className={`absolute -left-2 w-4 h-4 rounded-full shadow-lg transition-colors duration-300 ${
                 isDarkTheme 
@@ -903,52 +828,39 @@ function App() {
             </motion.div>
           ))}
         </motion.div>
+        </BlockContentWrapper>
       </motion.section>
 
       {/* Freelance Platforms */}
       <motion.section 
         id="hire-me"
-        className="py-16 px-4 max-w-4xl mx-auto"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.2 }}
-        transition={{ 
-          duration: 2.2, 
-          ease: [0.68, -0.55, 0.265, 1.55],
-          times: [0, 0.25, 0.5, 0.75, 1],
-          y: { duration: 1.5, repeat: 0, ease: "easeInOut" },
-          opacity: { duration: 1.8, repeat: 0, ease: "easeInOut" }
-        }}
-        animate={{
-          y: [0, -3, 3, -1, 1, 0],
-          opacity: [1, 0.7, 1, 0.8, 1]
-        }}
+        className="py-16 px-4 max-w-4xl mx-auto overflow-hidden"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, amount: 0.05 }}
       >
+        <BlockRevealHeading isDarkTheme={isDarkTheme}>
         <motion.h2 
           className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -30, rotateY: -15 }}
-          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-          viewport={{ once: false, amount: 0.15 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          whileHover={{
-            x: [0, -2, 2, 0],
-            transition: { duration: 0.6, ease: "easeInOut" }
-          }}
+          whileHover={{ x: [0, -2, 2, 0] }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           <FaRocket className="inline mr-3" />
           [ HIRE_ME ]
         </motion.h2>
+        </BlockRevealHeading>
         
+        <BlockContentWrapper isDarkTheme={isDarkTheme}>
         <motion.div 
           className="text-center space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 1.8, ease: "easeOut" }}
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className={`text-xl transition-colors duration-300 ${
             isDarkTheme ? 'text-white' : 'text-gray-800'
@@ -1015,47 +927,40 @@ function App() {
             </div>
           </div>
         </motion.div>
+        </BlockContentWrapper>
       </motion.section>
 
             {/* Payment Methods */}
       <motion.section 
         id="payment"
-        className="py-16 px-4 max-w-4xl mx-auto"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.2 }}
-        transition={{ 
-          duration: 2.5, 
-          ease: [0.25, 0.46, 0.45, 0.94],
-          times: [0, 0.2, 0.4, 0.7, 0.9, 1],
-          y: { duration: 1.5, repeat: 0, ease: "easeInOut" },
-          opacity: { duration: 2.0, repeat: 0, ease: "easeInOut" }
-        }}
-        animate={{
-          y: [0, -3, 3, -1, 1, 0],
-          opacity: [1, 0.7, 1, 0.8, 1]
-        }}
+        className="py-16 px-4 max-w-4xl mx-auto overflow-hidden"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, amount: 0.05 }}
       >
+        <BlockRevealHeading isDarkTheme={isDarkTheme}>
         <motion.h2 
           className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -30, rotateY: -15 }}
-          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-          viewport={{ once: false, amount: 0.15 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          whileHover={{
-            x: [0, -2, 2, 0],
-            transition: { duration: 0.6, ease: "easeInOut" }
-          }}
+          whileHover={{ x: [0, -2, 2, 0] }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           <FaShieldAlt className="inline mr-4" />
           [ PAYMENT_METHODS ]
         </motion.h2>
+        </BlockRevealHeading>
         
-        <div className="space-y-8">
+        <BlockContentWrapper isDarkTheme={isDarkTheme}>
+        <motion.div 
+          className="space-y-8"
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.1 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
           {/* Local Clients */}
           <motion.div 
             className={`text-center p-6 border-l-2 pl-6 relative transition-colors duration-300 ${
@@ -1223,54 +1128,41 @@ function App() {
               </div>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
+        </BlockContentWrapper>
       </motion.section>
 
 
       {/* Contact & Social Media */}
       <motion.section 
         id="connect"
-        className="py-16 px-4 max-w-4xl mx-auto"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.2 }}
-        transition={{ 
-          duration: 2.8, 
-          ease: [0.6, -0.28, 0.735, 0.045],
-          times: [0, 0.2, 0.4, 0.6, 0.8, 1],
-          y: { duration: 1.8, repeat: 0, ease: "easeInOut" },
-          opacity: { duration: 2.2, repeat: 0, ease: "easeInOut" }
-        }}
-        animate={{
-          y: [0, -4, 4, -2, 2, 0],
-          opacity: [1, 0.6, 1, 0.7, 1]
-        }}
+        className="py-16 px-4 max-w-4xl mx-auto overflow-hidden"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, amount: 0.05 }}
       >
+        <BlockRevealHeading isDarkTheme={isDarkTheme}>
         <motion.h2 
           className={`heading-3d text-3xl font-bold mb-8 text-left border-b pb-4 transition-colors duration-300 py-4 ${
             isDarkTheme 
               ? 'border-white/50 text-white' 
               : 'border-gray-800/50 text-gray-800'
           }`}
-          initial={{ opacity: 0, x: -30, rotateY: -15 }}
-          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-          viewport={{ once: false, amount: 0.15 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          whileHover={{
-            x: [0, -2, 2, 0],
-            transition: { duration: 0.6, ease: "easeInOut" }
-          }}
+          whileHover={{ x: [0, -2, 2, 0] }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           <FaShieldAlt className="inline mr-3" />
           [ CONNECT ]
         </motion.h2>
+        </BlockRevealHeading>
         
+        <BlockContentWrapper isDarkTheme={isDarkTheme}>
         <motion.div 
           className="text-center space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 1.8, ease: "easeOut" }}
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className={`text-xl mb-8 transition-colors duration-300 ${
             isDarkTheme ? 'text-white' : 'text-gray-800'
@@ -1335,6 +1227,7 @@ function App() {
             </a>
           </div>
         </motion.div>
+        </BlockContentWrapper>
       </motion.section>
 
       {/* Footer */}
