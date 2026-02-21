@@ -16,7 +16,6 @@ import {
   FaUserTie,
 } from 'react-icons/fa'
 import { SiSolidity, SiRust, SiReact, SiJavascript, SiTypescript, SiNodedotjs, SiTailwindcss, SiBootstrap, SiHtml5, SiCss3, SiDocker, SiLinux, SiGit, SiFigma } from 'react-icons/si'
-import ChatBot from './components/ChatBot'
 
 function App() {
   const [currentText, setCurrentText] = useState('')
@@ -1334,9 +1333,6 @@ function App() {
           </span>
         </p>
       </motion.footer>
-
-      {/* Chat Bot Component */}
-      <ChatBot isDarkTheme={isDarkTheme} />
     </div>
   )
 }
