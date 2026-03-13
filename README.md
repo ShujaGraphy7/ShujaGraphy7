@@ -32,47 +32,16 @@
   <img src="https://skillicons.dev/icons?i=solidity,rust,react,nextjs,js,nodejs,tailwind,html,css,docker,linux,git,vscode,figma&perline=8" />
 </p>
 
-**Blockchain**
-- Solidity  
-- Rust  
-- Ethereum  
-- Solana  
-- Smart Contracts  
-- Anchor  
-
-**Web3**
-- Web3.js  
-- Ethers.js  
-- Wallet Integration  
-- IPFS  
-- DeFi & NFT Standards  
-
-**Frontend**
-- React.js  
-- Next.js  
-- JavaScript  
-- Tailwind CSS  
-- HTML / CSS  
-
-**Backend**
-- Node.js  
-- Express.js  
-- REST APIs  
-
-**AI & Emerging Tech**
-- AI Chatbots  
-- LLM Applications  
-- Cursor AI  
-
-**DevOps & Tools**
-- Docker  
-- Git  
-- Linux  
-- Vercel  
-- Netlify  
-- Hardhat  
-- Foundry  
-
+| Category | Skills |
+|--------|--------|
+| **Blockchain Development** | Solidity, Rust, Ethereum, Solana, Smart Contracts, Anchor |
+| **Web3 Technologies** | Web3.js, Ethers.js, IPFS, Wallet Integration, DeFi Protocols, NFT Standards |
+| **Frontend Development** | React.js, Next.js, JavaScript, HTML, CSS, Tailwind CSS |
+| **Backend Development** | Node.js, Express.js, REST APIs |
+| **AI & Emerging Tech** | AI Chatbots, LLM Applications, Cursor AI |
+| **DevOps & Tools** | Docker, Git, Linux, Vercel, Netlify |
+| **Development Tools** | Hardhat, Foundry, VS Code |
+| **Operating Systems** | Linux, Windows, macOS, Android, iOS |
 ---
 
 # 💼 Experience Timeline
