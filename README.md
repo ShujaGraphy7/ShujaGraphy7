@@ -6,72 +6,94 @@
 <!-- Typing Intro -->
 <p align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=26&pause=1000&color=F70000&center=true&vCenter=true&width=900&height=100&lines=Blockchain+Consultant;AI;Blockchain+%7C+Solana%2C+Ethereum%2C+Private+Blockchains;Full+Stack+Developer;Solidity+%7C+Rust+%7C+Anchor;DeFi+%7C+NFT+%7C+Web3+Specialist&multiline=true&lineHeight=42"/>
+    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=26&pause=1000&color=F70000&center=true&vCenter=true&width=900&height=100&lines=Blockchain+Engineer;Web3+%7C+AI+Applications;Ethereum+%7C+Solana+Developer;Full+Stack+Web3+Developer;Solidity+%7C+Rust+%7C+React+Developer;DeFi+%7C+NFT+%7C+dApp+Architect&multiline=true&lineHeight=42"/>
   </a>
 </p>
 
 ---
 
-## 🧑‍💻 About Me
+# 🧑‍💻 About Me
 
-🌟 **Blockchain & AI Consultant | Full-Stack Developer | Web3 Innovator**  
+🌟 **Blockchain Engineer | Web3 Developer | AI Applications**
 
-- 💼 **3+ years of experience** delivering blockchain solutions across **Ethereum, Solana, and Private Blockchains**.  
-- 🔗 Specialized in **Smart Contracts, DeFi, NFTs, and Full-Stack Blockchain Applications**.  
-- 📖 **Published Research Author** (*Springer 2023 – Securing Supply Chains with Blockchain*).  
-- 🚀 **Co-Founder of Hashnetics** → Building next-gen solutions in **Blockchain, Web, E-Commerce, and Design**.  
-- 🎯 Passionate about **scalable, secure, and futuristic blockchain ecosystems**.  
-- ⚡ Strong believer in **continuous learning, innovation, and decentralization**.  
+- 💼 **3+ years of experience** building decentralized applications and blockchain platforms.  
+- 🔗 Experienced in **Ethereum and Solana ecosystems**, smart contracts, DeFi platforms, and NFT systems.  
+- ⚙️ Strong background in **Full-Stack Web3 development** using Solidity, Rust, React, Node.js, Hardhat, and Foundry.  
+- 🤖 Also working with **AI-powered applications including LLM chatbots and automation tools**.  
+- 🚀 Former **Technical Co-Founder at Hashnetics**, delivering blockchain solutions for startups and global clients.  
+- 📖 **Published Research Author (Springer 2023)** – Blockchain-based supply chain security.  
+- 🎯 Passionate about building **secure, scalable, and production-ready Web3 systems**.
 
 ---
 
-## ⚡ Tech Arsenal  
+# ⚡ Tech Arsenal
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=solidity,rust,react,js,ts,nodejs,tailwind,bootstrap,html,css,docker,linux,git,vscode,figma&perline=8" />
+  <img src="https://skillicons.dev/icons?i=solidity,rust,react,nextjs,js,nodejs,tailwind,html,css,docker,linux,git,vscode,figma&perline=8" />
 </p>
 
+| Category | Skills |
+|--------|--------|
+| **Blockchain Development** | Solidity, Rust, Ethereum, Solana, Smart Contracts, Anchor |
+| **Web3 Technologies** | Web3.js, Ethers.js, IPFS, Wallet Integration, DeFi Protocols, NFT Standards |
+| **Frontend Development** | React.js, Next.js, JavaScript, HTML, CSS, Tailwind CSS |
+| **Backend Development** | Node.js, Express.js, REST APIs |
+| **AI & Emerging Tech** | AI Chatbots, LLM Applications, Cursor AI |
+| **DevOps & Tools** | Docker, Git, Linux, Vercel, Netlify |
+| **Development Tools** | Hardhat, Foundry, VS Code |
+| **Operating Systems** | Linux, Windows, macOS, Android, iOS |
 ---
 
-## 💼 Experience Timeline  
-
-🟢 **Mar 2025 – Present**  
-### 🚀 Co-Founder – [Hashnetics](https://hashnetics.com/)  
-> Building **Blockchain & Full-Stack solutions** for startups and enterprises.  
-💡 Delivered projects with **Ethereum, Solana, MERN, Shopify, WooCommerce**.  
-🎨 Led **UI/UX + branding** alongside technical development.  
-
----
+# 💼 Experience Timeline
 
 🟢 **Dec 2022 – Present**  
-### 🌍 Freelance Blockchain Developer  
-> DeFi, NFT platforms, **end-to-end smart contracts + Web3 integrations**.  
-🛠️ Tech stack: Solidity, Rust, Anchor, React, Next.js, Tailwind.  
-🔍 Provided **audits, consulting, and bug fixing** for global clients.  
+### 🌍 Freelance Blockchain Developer – Remote
+
+Working with **global clients from USA, UK, and Pakistan**.
+
+- Built decentralized applications for **DeFi and NFT platforms**.  
+- Developed smart contracts for **Ethereum and Solana networks**.  
+- Built full-stack blockchain products using **Solidity, Rust, React, Next.js, Node.js**.  
+- Integrated **wallets, token contracts, and Web3 APIs** into modern applications.  
+- Provided **smart contract auditing, bug fixing, and blockchain consulting**.
+
+---
+
+🟢 **Mar 2025 – Jan 2026**  
+### 🚀 Technical Co-Founder / Lead Blockchain Engineer – Hashnetics
+
+- Led architecture and development of **blockchain and Web3 platforms**.  
+- Delivered decentralized applications using **Ethereum, Solana, Solidity, Rust, and MERN stack**.  
+- Designed **scalable blockchain architecture for startups**.  
+- Managed product lifecycle including **planning, UI/UX coordination, and deployment**.
 
 ---
 
 🟢 **Sep 2023 – Feb 2025**  
-### 🏢 Junior Consultant Blockchain – Systems Limited  
-> Developed & deployed **Ethereum & Solana smart contracts**.  
-📈 Enhanced **transaction efficiency, scalability, and security**.  
-🤝 Collaborated with teams on **enterprise blockchain solutions**.  
+### 🏢 Junior Consultant Blockchain – Systems Limited
+
+- Developed and deployed **smart contracts for Ethereum and Solana**.  
+- Collaborated with blockchain teams to improve **transaction efficiency and security**.  
+- Participated in **full development lifecycle** from design to deployment.  
+- Integrated blockchain solutions into **enterprise systems**.
 
 ---
 
 🟢 **Feb 2024 – May 2024**  
-### 🌐 Full Stack Blockchain Dev – FusionwaveAI  
-> Specialized in **Shardium, Skale, and Hala blockchains**.  
-⚡ Increased transaction speeds by **20%**.  
-🛠️ Optimized development workflows, cutting build times by **15%**.  
+### 🌐 Blockchain Developer – FusionwaveAI (Contract)
+
+- Worked on **Shardium, Skale, and Hala Ethereum-based blockchains**.  
+- Improved **transaction speed by 20%**.  
+- Streamlined development processes reducing **build time by 15%**.
 
 ---
 
 🟢 **Dec 2022 – Aug 2023**  
-### 🔒 Blockchain Developer – Kaizen Global  
-> Spearheaded **smart contract deployment & auditing**.  
-🛡️ Reduced vulnerabilities by **15%** through better auditing.  
-🔗 Improved **operational efficiency** with secure blockchain solutions.  
+### 🔒 Blockchain Developer – Kaizen Global
+
+- Led **smart contract deployment and auditing**.  
+- Improved security practices reducing **potential vulnerabilities by 15%**.  
+- Worked with **React, Node.js, and blockchain integrations**.
 
 ---
 
@@ -89,7 +111,37 @@
 
 ---
 
-## 📊 GitHub Insights  
+# 🚀 Project Portfolio
+
+### 📄 Blockchain Document Signing Platform
+- Decentralized document verification using **Ethereum smart contracts and IPFS**.  
+- Enabled **tamper-proof document authentication** via blockchain.
+
+**Tech:** Solidity, Ethereum, IPFS, React, Node.js
+
+---
+
+### 📦 Decentralized File Storage System
+- Built Web3 file storage integrating **IPFS with Ethereum smart contracts**.  
+- Secure decentralized file upload and retrieval system.
+
+**Tech:** Ethereum, Solidity, IPFS, Web3.js
+
+---
+
+### 🛒 Blockchain E-Commerce Plugin
+- Plugin enabling **blockchain payments and transaction verification** for ecommerce platforms.
+
+---
+
+### 🤖 AI Chatbot
+- Built **LLM-based chatbot** to automate business communication workflows.
+
+**Tech:** LLM APIs, Node.js, React
+
+---
+
+# 📊 GitHub Insights
 
 <p align="center">
   <img src="https://github-readme-stats.vercel.app/api?username=ShujaGraphy7&show_icons=true&theme=radical&hide_border=true" height="180em"/>
@@ -102,16 +154,32 @@
 
 ---
 
-## 🎓 Education & Certifications  
+# 🎓 Education
 
-🎓 **Bsc Computer Science** – (2018–2022)  
-📜 **Blockchain Specialization** – Coursera  
-📜 **DeFi – Future of Finance** – Coursera  
-📜 **Cyber Security Foundations** – ISCS  
+🎓 **BS Computer Science**  
+University of Azad Jammu & Kashmir (2018 – 2022)
+
+🎓 **DAE – Information & Communication Technology**  
+Punjab Board of Technical Education (2015 – 2018)
 
 ---
 
-## 🌐 Let’s Connect  
+# 📚 Research Publication
+
+📖 **Securing Supply-Chain Network with Blockchain**  
+Springer – *Advances in Information and Communication (FICC 2023)*
+
+---
+
+# 📜 Certifications
+
+- Blockchain Specialization – Coursera  
+- Decentralized Finance: The Future of Finance – Coursera  
+- Cyber Security & System Administration – ISCS
+
+---
+
+# 🌐 Let’s Connect
 
 <p align="center">
   <a href="https://www.linkedin.com/in/shujagraphy7/"><img src="https://skillicons.dev/icons?i=linkedin" width="50"/></a>
