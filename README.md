@@ -75,6 +75,19 @@
 
 ---
 
+## 🏆 GitHub Achievements  
+
+<p align="center">
+  <a href="https://github.com/ShujaGraphy7?tab=achievements">
+    <img src="https://img.shields.io/badge/View_my_GitHub_Achievements-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Achievements"/>
+  </a>
+</p>
+
+<p align="center">
+  <img src="https://github-profile-trophy.vercel.app/?username=ShujaGraphy7&theme=radical&no-frame=true&no-bg=true&row=1&column=7" alt="GitHub Trophies"/>
+</p>
+
+---
 
 ## 📊 GitHub Insights  
 
