@@ -16,7 +16,7 @@
 
 🌟 **Blockchain Engineer | Web3 Developer | AI Applications**
 
-- 💼 **3+ years of experience** building decentralized applications and blockchain platforms.  
+- 💼 **4+ years of experience** building decentralized applications and blockchain platforms.  
 - 🔗 Experienced in **Ethereum and Solana ecosystems**, smart contracts, DeFi platforms, and NFT systems.  
 - ⚙️ Strong background in **Full-Stack Web3 development** using Solidity, Rust, React, Node.js, Hardhat, and Foundry.  
 - 🤖 Also working with **AI-powered applications including LLM chatbots and automation tools**.  
